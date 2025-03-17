@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Firma</title>
+    <!-- Import fontu Doto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Import fontu Roboto Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Doto', monospace;
+            color: #fff;
+            overflow-x: hidden;
+            background: #000;
+            cursor: cell;
+        }
+
+        .section {
+            width: 100%;
+            padding: 50px;
+            position: relative;
+            background: #000;
+            z-index: 1;
+        }
+
+        .divider {
+            position: absolute;
+            bottom: 0px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            border-bottom: 4px dashed #fff;
+            z-index: 2;
+        }
+
+        /* Sekce 1 */
+        .section-1 {
+            padding: 50px;
+            color: #FF00FF;
+            z-index: 6;
+            overflow: hidden;
+            height: clamp(300px, 40vw, 500px);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+
+        .logo {
+            width: clamp(300px, 75vw, 900px);
+            height: auto;
+            animation: shrinkLogo 2s ease 3s forwards; /* Plynulejší – 2s místo 1s */
+        }
+
+        #logo-video {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        @keyframes shrinkLogo {
+            from {
+                width: clamp(300px, 75vw, 900px);
+                top: 0;
+                left: 0;
+            }
+            to {
+                width: clamp(100px, 20vw, 300px);
+                top: 2vw;
+                left: 2vw;
+            }
+        }
+
+        .section-1 .content {
+            opacity: 0; /* Skryjeme na začátku */
+            transition: opacity 1s ease;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding-bottom: 10px;
+        }
+
+        .section-1 .content.visible {
+            opacity: 1;
+        }
+
+        /* Skrytý obsah */
+        .content.hidden {
+            opacity: 0;
+        }
+
+        /* Zobrazení obsahu */
+        .content.visible {
+            opacity: 1;
+            transition: opacity 1s ease;
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: #FF00FF;
+            color: #000;
+            border: none;
+            cursor: crosshair;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .typewriter {
+            position: relative;
+            font-size: clamp(14px, 4vw, 50px);
+            min-height: 4em;
+            
+        }
+
+        .typewriter .static-text {
+            display: block;
+            cursor: cell;
+        }
+
+        .typewriter .dynamic-text {
+            display: inline-block;
+        }
+
+        /* Typewriter v sekci 1 – pod logo */
+        .section-1 .typewriter {
+            position: relative;
+            font-size: clamp(14px, 4vw, 50px);
+            min-height: 4em;
+            text-align: left;
+        }
+
+        /* Typewriter v sekci 3 – zarovnání k levému okraji */
+        .section-3 .typewriter {
+            left: 0; /* Bez posunu od levého okraje */
+            margin-left: 0; /* Rušíme margin-left */
+        }
+
+        /* Sekce 2 */
+        .section-2 {
+            color: #00FF00;
+            z-index: 5;
+        }
+
+        .section-2 .fade-text {
+            font-family: 'Doto', monospace;
+            text-align: right;
+            font-size: clamp(14px, 4vw, 50px);
+            line-height: 1.2;
+        }
+
+        /* Sekce 3 */
+        .section-3 {
+            color: #00FFFF;
+            z-index: 4;
+        }
+
+        /* Sekce 4 */
+        .section-4 {
+            color: #FF8000;
+            z-index: 3;
+        }
+
+        .section-4 .fade-text {
+            font-family: 'Doto', monospace;
+            text-align: right;
+            font-size: clamp(14px, 4vw, 50px);
+            line-height: 1.2;
+        }
+
+        /* Sekce 5 */
+        .section-5 {
+            color: #FFFF00;
+            font-size: clamp(14px, 2vw, 30px);
+            z-index: 2;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .section-5 p {
+            cursor: cell;
+        }
+
+        .social-buttons {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+        }
+
+        .social-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: #00000000;
+            color: #FFFF00;
+            text-align: center;
+            line-height: 40px;
+            text-decoration: none;
+            cursor: crosshair;
+        }
+
+        .contact-text {
+            font-family: 'Roboto Mono', monospace;
+            color: #FFFF00;
+            font-size: clamp(14px, 2vw, 20px);
+        }
+
+        .copy-btn {
+            background: #000000;
+            color: #FFFF00;
+            border: none;
+            padding: 5px;
+            cursor: cell;
+            font-size: clamp(14px, 2vw, 20px);
+            line-height: 1;
+        }
+
+        /* Sekce 6 */
+        .section-6 {
+            color: #FFFF00;
+            background: #000;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .section-6 p {
+            color: #757575;
+            font-size: clamp(14px, 1vw, 20px);
+            cursor: cell;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 4px;
+            height: 1em;
+            background: currentColor;
+            vertical-align: middle;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .tooltip {
+            position: relative;
+            display: block;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            background: #000;
+            color: inherit;
+            font-family: 'Roboto Mono', monospace;
+            border: 2px solid #fff;
+            padding: 10px;
+            border-radius: 5px;
+            position: absolute;
+            z-index: 10;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: clamp(12px, 2vw, 40px);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            max-width: 90vw;
+            white-space: nowrap;
+            gap: 5px;
+        }
+
+        .tooltip-left .tooltip-text {
+            left: calc(40% + 100px);
+            transform: translateY(-50%);
+        }
+
+        .tooltip-right .tooltip-text {
+            right: calc(45% + 100px);
+            transform: translateY(-50%);
+        }
+
+        .tooltip:hover .tooltip-text,
+        .tooltip:active .tooltip-text {
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="section section-1">
+            <div class="logo">
+                <video id="logo-video" autoplay muted playsinline>
+                    <source src="0Null_anim.mp4" type="video/mp4">
+                    Tvůj prohlížeč nepodporuje video.
+                </video>
+            </div>
+            <div class="content hidden">
+                <button class="lang-toggle">CZ/EN</button>
+                <div class="typewriter">
+                    <span class="static-text"></span>
+                    <span class="dynamic-text"></span>
+                </div>
+                <div class="divider"></div>
+            </div>
+        </div>
+
+        <div class="section section-2">
+            <div class="content hidden">
+                <div>
+                    <div class="fade-text"><span class="tooltip tooltip-right" data-tooltip="Návrh / Kabeláž / Zapojení">Budování sítí</span><span class="tooltip tooltip-right" data-tooltip="Správa / Konzultace / Servis">IT Služby</span><span class="tooltip tooltip-right" data-tooltip="Konfigurace / Optimalizace">Software / Hardware</span><span class="tooltip tooltip-right" data-tooltip="Automatizované / Šifrované">Zálohování dat</span></div>
+                </div>
+                <div class="divider"></div>
+            </div>
+        </div>
+
+        <div class="section section-3">
+            <div class="content hidden">
+                <div class="typewriter">
+                    <span class="tooltip tooltip-left" data-tooltip="Moderní / Lehký / Přehledný"><span class="static-text"></span></span>
+                    <span class="tooltip tooltip-left" data-tooltip="Scripty / Databáze / Automatizace"><span class="static-text"></span></span>
+                    <span class="tooltip tooltip-left" data-tooltip="Frontend / Backend / API"><span class="static-text"></span></span>
+                    <span class="dynamic-text"></span>
+                </div>
+                <div class="divider"></div>
+            </div>
+        </div>
+
+        <div class="section section-4">
+            <div class="content hidden">
+                <div>
+                    <div class="fade-text"><span class="tooltip tooltip-right" data-tooltip="Web / Aplikace / Hry">Integrace AI</span><span class="tooltip tooltip-right" data-tooltip="Decentralizace / Stabilita / Budoucnost">Web3 / DeWeb</span><span class="tooltip tooltip-right" data-tooltip="Smart_kontrakty / Nová_éra / NFT_Hry">SC / ASC / NFTs</span><span class="tooltip tooltip-right" data-tooltip="Vývoj / Scénáře / Level_design">Herní mechaniky</span><span class="tooltip tooltip-right" data-tooltip="Vzdělávání / Naše_budoucnost">AI pro děti</span></div>
+                </div>    
+                <div class="divider"></div>
+            </div>
+        </div>
+
+        <div class="section section-5">
+            <div class="content hidden">
+                <div class="contact">
+                    <div class="social-buttons">
+                        <div class="contact-row tooltip tooltip-left" data-tooltip="Poptávky / Nabídky / Texty">
+                            <div class="social-btn">✉️</div>
+                            <span class="contact-text">napis@0null.cz</span>
+                            <button class="copy-btn" data-copy="napis@0null.cz">⧉</button>
+                        </div>
+                        <div class="contact-row tooltip tooltip-left" data-tooltip="Nálehavé / Rychlé_řešení / Konzultace">
+                            <div class="social-btn">📞</div>
+                            <span class="contact-text">720210516</span>
+                            <button class="copy-btn" data-copy="720210516">⧉</button>
+                        </div>
+                        <div class="social-row">
+                            <a href="#" class="social-btn">𝕏</a>
+                            <a href="#" class="social-btn">𝕃𝕚</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="divider"></div>
+            </div>
+        </div>
+
+        <div class="section section-6">
+            <div class="content hidden">
+                <p>© 2025 | 0NULL</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Zakázání automatického scroll restoration
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+    
+        // Okamžitý posun na začátek při načtení DOMu
+        document.addEventListener("DOMContentLoaded", function () {
+            window.scrollTo(0, 0); // Pojistka hned po načtení DOMu
+            const contents = document.querySelectorAll(".content");
+    
+    
+            // ... zbytek setTimeoutů beze změny
+        });
+    
+        // Posun na začátek po úplném načtení (včetně videa)
+        window.onload = function() {
+            window.scrollTo(0, 0); // Druhá pojistka po načtení všech zdrojů
+        };
+
+        // Typewriter funkce (beze změny)
+        function typeWord(element, words) {
+            let wordIndex = 0;
+            let charIndex = 0;
+            let currentWord = '';
+            let isDeleting = false;
+    
+            const cursor = document.createElement('span');
+            cursor.classList.add('cursor');
+            element.appendChild(cursor);
+    
+            function type() {
+                currentWord = words[wordIndex];
+                if (isDeleting) {
+                    element.childNodes[0].textContent = currentWord.substring(0, charIndex--);
+                    if (charIndex < 0) {
+                        isDeleting = false;
+                        wordIndex = (wordIndex + 1) % words.length;
+                        setTimeout(type, 500);
+                    } else {
+                        setTimeout(type, 100);
+                    }
+                } else {
+                    element.childNodes[0].textContent = currentWord.substring(0, charIndex++);
+                    if (charIndex > currentWord.length) {
+                        isDeleting = true;
+                        setTimeout(type, 2000);
+                    } else {
+                        setTimeout(type, 100);
+                    }
+                }
+            }
+    
+            element.insertBefore(document.createTextNode(''), cursor);
+            type();
+        }
+    
+        // Přepínání jazyka
+        const langToggle = document.querySelector('.lang-toggle');
+        langToggle.addEventListener('click', () => {
+            langToggle.textContent = langToggle.textContent === 'CZ/EN' ? 'EN/CZ' : 'CZ/EN';
+        });
+    
+        // Tooltip inicializace
+        document.querySelectorAll('.tooltip').forEach(tooltip => {
+            const tooltipText = document.createElement('span');
+            tooltipText.classList.add('tooltip-text');
+            
+            const tooltipContent = tooltip.getAttribute('data-tooltip');
+            if (tooltipContent) {
+                const words = tooltipContent.split(' ');
+                tooltipText.innerHTML = words.map(word => `<span class="word">${word}</span>`).join('');
+            }
+            
+            tooltip.appendChild(tooltipText);
+    
+            const section = tooltip.closest('.section');
+            if (section && (section.classList.contains('section-2') || section.classList.contains('section-4'))) {
+                tooltip.classList.add('tooltip-right');
+            } else {
+                tooltip.classList.add('tooltip-left');
+            }
+        });
+    
+        // Logika pro trvalé tooltipy a kopírování
+        let activeTooltip = null;
+    
+        document.querySelectorAll('.tooltip').forEach(tooltip => {
+            const tooltipText = tooltip.querySelector('.tooltip-text');
+    
+            tooltip.addEventListener('mouseenter', () => {
+                if (activeTooltip && activeTooltip !== tooltipText) {
+                    activeTooltip.style.visibility = 'hidden';
+                }
+                tooltipText.style.visibility = 'visible';
+                activeTooltip = tooltipText;
+            });
+    
+            tooltip.addEventListener('click', () => {
+                if (activeTooltip && activeTooltip !== tooltipText) {
+                    activeTooltip.style.visibility = 'hidden';
+                }
+                tooltipText.style.visibility = 'visible';
+                activeTooltip = tooltipText;
+            });
+        });
+    
+        // Kopírování při kliknutí na tlačítko
+        document.querySelectorAll('.copy-btn').forEach(copyBtn => {
+            copyBtn.addEventListener('click', () => {
+                const textToCopy = copyBtn.getAttribute('data-copy');
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    copyBtn.textContent = '✅';
+                    setTimeout(() => {
+                        copyBtn.textContent = '⧉';
+                    }, 1000);
+                });
+            });
+        });
+    
+        // Umožnění výběru textu v tooltipu
+        document.querySelectorAll('.tooltip-text').forEach(tooltipText => {
+            tooltipText.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+            });
+        });
+    
+        // Postupné zobrazení sekcí a inicializace typewriteru
+        document.addEventListener("DOMContentLoaded", function () {
+            const contents = document.querySelectorAll(".content");
+    
+            // Sekce 1 – inicializace typewriteru po zobrazení
+            setTimeout(function () {
+                contents[0].classList.remove("hidden");
+                contents[0].classList.add("visible");
+    
+                const writer1 = contents[0].querySelector('.typewriter');
+                const staticTexts1 = writer1.querySelectorAll('.static-text');
+                const dynamicText1 = writer1.querySelector('.dynamic-text');
+                staticTexts1[0].textContent = "Návrh / Realizace / Údržba";
+                const words1 = ["SW/HW", "IT_Služby", "HTML5", "Zálohování", "Servery", "Integrace_AI", "Domácí_sítě", "Programování", "Optimalizace"];
+                typeWord(dynamicText1, words1);
+            }, 5000); // 5s
+    
+            // Sekce 2
+            setTimeout(function () {
+                contents[1].classList.remove("hidden");
+                contents[1].classList.add("visible");
+            }, 6000); // 6s
+    
+            // Sekce 3 – inicializace typewriteru po zobrazení
+            setTimeout(function () {
+                contents[2].classList.remove("hidden");
+                contents[2].classList.add("visible");
+    
+                const writer3 = contents[2].querySelector('.typewriter');
+                const staticTexts3 = writer3.querySelectorAll('.static-text');
+                const dynamicText3 = writer3.querySelector('.dynamic-text');
+                staticTexts3[0].textContent = "HTML5 / CSS / PHP";
+                staticTexts3[1].textContent = "Python / SQLite";
+                staticTexts3[2].textContent = "JS / TS / Node.js";
+                const words3 = ["Design", "WebApp", "Testing", "Automation", "LevelDesign", "UI", "Scripting", "NFTs", "UX", "Server", 
+                    "Prototyping", "Backend", "Web3", "GameMechanics", "API", "Optimization", "Frontend", "Database", "Debugging"];
+                typeWord(dynamicText3, words3);
+            }, 7000); // 7s
+    
+            // Sekce 4
+            setTimeout(function () {
+                contents[3].classList.remove("hidden");
+                contents[3].classList.add("visible");
+            }, 8000); // 8s
+    
+            // Sekce 5
+            setTimeout(function () {
+                contents[4].classList.remove("hidden");
+                contents[4].classList.add("visible");
+            }, 9000); // 9s
+    
+            // Sekce 6
+            setTimeout(function () {
+                contents[5].classList.remove("hidden");
+                contents[5].classList.add("visible");
+            }, 10000); // 10s
+        });
+    </script>
+</body>
+</html>
