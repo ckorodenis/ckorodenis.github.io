@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moje Firma</title>
-    <!-- Import fontu Doto -->
+    <title>0NULL | Servis PC, Domácí sítě a Záloha dat</title>
+    <meta name="description" content="Servis PC, notebooků a domácích sítí od 0NULL. Řešení problémů s HW/SW, přeinstalace OS, zálohy dat, LAN rozvody a modernizace sítí.">
+    <meta name="keywords" content="servis PC, domácí sítě, záloha dat, modernizace sítí, LAN přípojky, UTP rozvody, přeinstalace systémů, řešení problémů HW SW, 0NULL">
+    <meta name="author" content="0NULL">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap" rel="stylesheet">
-    <!-- Import fontu Roboto Mono -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+
     <style>
         * {
             margin: 0;
@@ -45,7 +49,6 @@
             z-index: 2;
         }
 
-        /* Sekce 1 */
         .section-1 {
             padding: 50px;
             color: #FF00FF;
@@ -58,11 +61,10 @@
             justify-content: flex-start;
         }
 
-
         .logo {
             width: clamp(300px, 75vw, 900px);
             height: auto;
-            animation: shrinkLogo 2s ease 3s forwards; /* Plynulejší – 2s místo 1s */
+            animation: shrinkLogo 2s ease 3s forwards;
         }
 
         #logo-video {
@@ -85,7 +87,7 @@
         }
 
         .section-1 .content {
-            opacity: 0; /* Skryjeme na začátku */
+            opacity: 0;
             transition: opacity 1s ease;
             flex-grow: 1;
             display: flex;
@@ -98,12 +100,10 @@
             opacity: 1;
         }
 
-        /* Skrytý obsah */
         .content.hidden {
             opacity: 0;
         }
 
-        /* Zobrazení obsahu */
         .content.visible {
             opacity: 1;
             transition: opacity 1s ease;
@@ -113,33 +113,33 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            width: clamp(20px, 4vw, 40px); /* Responzivní šířka */
-            height: clamp(20px, 4vw, 40px); /* Responzivní výška */
-            background: #FF00FF; /* Magenta pozadí */
+            width: clamp(20px, 4vw, 40px);
+            height: clamp(20px, 4vw, 40px);
+            background: #FF00FF;
             border: none;
-            box-shadow: clamp(3px, 0.75vw, 5px) clamp(3px, 0.75vw, 5px) 0 #FFFFFF; /* Responzivní stín */
+            box-shadow: clamp(3px, 0.75vw, 5px) clamp(3px, 0.75vw, 5px) 0 #FFFFFF;
             cursor: crosshair;
             padding: 0;
-            font-family: 'Roboto Mono', monospace; /* Retro font */
-            font-size: clamp(10px, 1.5vw, 16px); /* Responzivní velikost textu */
+            font-family: 'Roboto Mono', monospace;
+            font-size: clamp(10px, 1.5vw, 16px);
             text-transform: uppercase;
-            transition: box-shadow 0.2s ease, transform 0.2s ease; /* Plynulé změny */
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
         }
 
         .lang-toggle .lang-text {
             display: block;
-            color: #FFFFFF; /* Bílý text */
+            color: #FFFFFF;
             text-align: center;
-            line-height: clamp(20px, 4vw, 40px); /* Vycentrování podle výšky */
+            line-height: clamp(20px, 4vw, 40px);
         }
 
         .lang-toggle:hover {
-            box-shadow: clamp(8px, 1vw, 10px) clamp(8px, 1vw, 10px) 0 #FFFFFF; /* Větší stín při najetí */
+            box-shadow: clamp(8px, 1vw, 10px) clamp(8px, 1vw, 10px) 0 #FFFFFF;
         }
 
         .lang-toggle:active {
-            box-shadow: clamp(1px, 0.25vw, 2px) clamp(1px, 0.25vw, 2px) 0 #FFFFFF; /* Menší stín při kliknutí */
-            transform: translate(clamp(1px, 0.25vw, 2px), clamp(1px, 0.25vw, 2px)); /* Responzivní posun */
+            box-shadow: clamp(1px, 0.25vw, 2px) clamp(1px, 0.25vw, 2px) 0 #FFFFFF;
+            transform: translate(clamp(1px, 0.25vw, 2px), clamp(1px, 0.25vw, 2px));
         }
 
         @keyframes fadeIn {
@@ -163,7 +163,6 @@
             display: inline-block;
         }
 
-        /* Typewriter v sekci 1 – pod logo */
         .section-1 .typewriter {
             position: relative;
             font-size: clamp(14px, 4vw, 50px);
@@ -171,13 +170,11 @@
             text-align: left;
         }
 
-        /* Typewriter v sekci 3 – zarovnání k levému okraji */
         .section-3 .typewriter {
-            left: 0; /* Bez posunu od levého okraje */
-            margin-left: 0; /* Rušíme margin-left */
+            left: 0;
+            margin-left: 0;
         }
 
-        /* Sekce 2 */
         .section-2 {
             color: #00FF00;
             z-index: 5;
@@ -190,13 +187,11 @@
             line-height: 1.2;
         }
 
-        /* Sekce 3 */
         .section-3 {
             color: #00FFFF;
             z-index: 4;
         }
 
-        /* Sekce 4 */
         .section-4 {
             color: #FF8000;
             z-index: 3;
@@ -209,7 +204,6 @@
             line-height: 1.2;
         }
 
-        /* Sekce 5 */
         .section-5 {
             color: #FFFF00;
             font-size: clamp(14px, 2vw, 30px);
@@ -255,15 +249,14 @@
         }
 
         .telegram-icon {
-            width: 100%; /* Vyplní tlačítko */
+            width: 100%;
             height: 100%;
-            padding: 5px; /* Malý okraj uvnitř tlačítka */
-            box-sizing: border-box; /* Aby padding ne přesáhl 40x40 */
+            padding: 5px;
+            box-sizing: border-box;
         }
 
-        /* Hover efekt – volitelné */
         .social-btn:hover .telegram-icon {
-            opacity: 0.8; /* Lehké ztmavnutí při najetí */
+            opacity: 0.8;
         }
 
         .contact-text {
@@ -282,7 +275,6 @@
             line-height: 1;
         }
 
-        /* Sekce 6 */
         .section-6 {
             color: #FFFF00;
             background: #000;
@@ -342,37 +334,36 @@
         }
 
         .tooltip-left .tooltip-text {
-            left: 40%; /* Začne hned za textem */
-            margin-left: 10px; /* Malá mezera od textu */
+            left: 40%;
+            margin-left: 10px;
         }
 
         .tooltip-right .tooltip-text {
-            right: 40%; /* Začne hned před textem */
-            margin-right: 10px; /* Malá mezera od textu */
+            right: 40%;
+            margin-right: 10px;
         }
 
-        /* Responzivní úprava pro mobily */
         @media (max-width: 768px) {
             .tooltip .tooltip-text {
-                white-space: normal; /* Na mobilu povolíme zalamování textu */
-                max-width: 80vw; /* Zmenšíme šířku, aby se vešel */
-                font-size: clamp(10px, 3vw, 16px); /* Menší text na mobilu */
+                white-space: normal;
+                max-width: 80vw;
+                font-size: clamp(10px, 3vw, 16px);
             }
 
             .tooltip-left .tooltip-text {
-                left: auto; /* Zrušíme pevnou pozici */
-                right: 0; /* Přilepíme k pravému okraji textu */
-                margin-left: 5px; /* Menší mezera na mobilu */
-                transform: none; /* Zrušíme vertikální posun */
-                top: 100%; /* Posuneme pod text místo vedle */
+                left: auto;
+                right: 0;
+                margin-left: 5px;
+                transform: none;
+                top: 100%;
             }
 
             .tooltip-right .tooltip-text {
-                right: auto; /* Zrušíme pevnou pozici */
-                left: 0; /* Přilepíme k levému okraji textu */
-                margin-right: 5px; /* Menší mezera na mobilu */
-                transform: none; /* Zrušíme vertikální posun */
-                top: 100%; /* Posuneme pod text místo vedle */
+                right: auto;
+                left: 0;
+                margin-right: 5px;
+                transform: none;
+                top: 100%;
             }
         }
 
@@ -384,12 +375,11 @@
 </head>
 <body>
     <div>
-        <!-- Sekce 1 -->
         <div class="section section-1">
             <div class="logo">
                 <video id="logo-video" autoplay muted playsinline>
                     <source src="0Null_anim.mp4" type="video/mp4">
-                    Tvůj prohlížeč nepodporuje video.
+                    Animation unsupported
                 </video>
             </div>
             <div class="content hidden">
@@ -402,7 +392,6 @@
             </div>
         </div>
 
-        <!-- Sekce 2 -->
         <div class="section section-2">
             <div class="content hidden">
                 <div class="fade-text">
@@ -415,7 +404,6 @@
             </div>
         </div>
 
-        <!-- Sekce 3 -->
         <div class="section section-3">
             <div class="content hidden">
                 <div class="typewriter" data-section="section3">
@@ -428,7 +416,6 @@
             </div>
         </div>
 
-        <!-- Sekce 4 -->
         <div class="section section-4">
             <div class="content hidden">
                 <div class="fade-text">
@@ -442,7 +429,6 @@
             </div>
         </div>
 
-        <!-- Sekce 5 -->
         <div class="section section-5">
             <div class="content hidden">
                 <div class="social-buttons">
@@ -468,7 +454,6 @@
             </div>
         </div>
 
-        <!-- Sekce 6 -->
         <div class="section section-6">
             <div class="content hidden">
                 <p data-key="footer">© 2025 | 0NULL</p>
@@ -477,12 +462,10 @@
     </div>
 
     <script>
-        // Zakázání automatického scroll restoration
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
         }
 
-        // Překladový objekt
         const translations = {
             "cs": {
                 "section1_static": "Návrh / Realizace / Údržba",
@@ -570,12 +553,10 @@
             }
         };
 
-        let currentLang = 'cs'; // Výchozí jazyk
-        const typewriterInstances = new Map(); // Pro ukládání typewriter timeoutů
+        let currentLang = 'cs';
+        const typewriterInstances = new Map();
 
-        // Typewriter funkce s možností zastavení
         function typeWord(element, words) {
-            // Zastavíme předchozí instanci
             if (typewriterInstances.has(element)) {
                 const timeouts = typewriterInstances.get(element);
                 timeouts.forEach(timeout => clearTimeout(timeout));
@@ -588,7 +569,7 @@
             let isDeleting = false;
             const timeouts = [];
 
-            element.innerHTML = ''; // Vyčistíme obsah
+            element.innerHTML = '';
             const cursor = document.createElement('span');
             cursor.classList.add('cursor');
             element.appendChild(cursor);
@@ -620,11 +601,9 @@
             typewriterInstances.set(element, timeouts);
         }
 
-        // Funkce pro aktualizaci textů
         function updateLanguage(lang) {
             currentLang = lang;
 
-            // Statické texty (včetně Sekce 2 a 4)
             document.querySelectorAll('[data-key]').forEach(element => {
                 const key = element.getAttribute('data-key');
                 if (translations[lang][key]) {
@@ -632,7 +611,6 @@
                 }
             });
 
-            // Tooltipy – aktualizace obsahu
             document.querySelectorAll('.tooltip').forEach(tooltip => {
                 const mainTextElement = tooltip.querySelector('.main-text');
                 const key = mainTextElement ? mainTextElement.getAttribute('data-key') : null;
@@ -642,25 +620,19 @@
                 if (tooltipText) {
                     let words;
                     if (tooltip.closest('.section-2') && key) {
-                        // Sekce 2: Tooltip podle přeloženého textu z data-key
                         const translatedText = translations[lang][key];
                         words = translations[lang].section2_fade[translatedText];
                     } else if (tooltip.closest('.section-4') && key) {
-                        // Sekce 4: Tooltip podle přeloženého textu z data-key
                         const translatedText = translations[lang][key];
                         words = translations[lang].section4_fade[translatedText];
                     } else if (tooltip.closest('.section-3') && tooltipKey) {
-                        // Sekce 3: Tooltip podle data-tooltip-key
                         words = translations[lang].section3_tooltips[tooltipKey];
                     } else if (tooltip.closest('.section-5') && tooltipKey) {
-                        // Sekce 5: Tooltip podle data-tooltip-key přímo v translations
                         words = translations[lang][tooltipKey];
                     } else if (tooltipKey) {
-                        // Fallback pro jiné tooltipy s data-tooltip-key
                         words = translations[lang][tooltipKey];
                     }
 
-                    // Nastavení obsahu tooltipu
                     if (words) {
                         tooltipText.innerHTML = words.split(' ').map(word => `<span class="word">${word}</span>`).join('');
                     } else {
@@ -669,17 +641,12 @@
                 }
             });
 
-            // Restart typewriterů
             const section1Dynamic = document.querySelector('.section-1 .dynamic-text');
             const section3Dynamic = document.querySelector('.section-3 .dynamic-text');
             typeWord(section1Dynamic, translations[lang].section1_dynamic);
             typeWord(section3Dynamic, translations[lang].section3_dynamic);
         }
 
-
-       
-
-        // Přepínání jazyka
         const langToggle = document.querySelector('.lang-toggle');
         const langText = langToggle.querySelector('.lang-text');
         langToggle.addEventListener('click', () => {
@@ -687,8 +654,6 @@
             langText.textContent = newLang === 'cs' ? 'EN' : 'CZ';
             updateLanguage(newLang);
         });
-
-        
 
         let activeTooltip = null;
         document.querySelectorAll('.tooltip').forEach(tooltip => {
@@ -721,7 +686,6 @@
             });
         });
 
-        // Kopírování při kliknutí na tlačítko
         document.querySelectorAll('.copy-btn').forEach(copyBtn => {
             copyBtn.addEventListener('click', () => {
                 const textToCopy = copyBtn.getAttribute('data-copy');
@@ -732,9 +696,7 @@
             });
         });
 
-        // Inicializace tooltipů a stránky
         document.addEventListener("DOMContentLoaded", function () {
-            // Vytvoření tooltip-text elementů
             document.querySelectorAll('.tooltip').forEach(tooltip => {
                 if (!tooltip.querySelector('.tooltip-text')) {
                     const tooltipText = document.createElement('span');
@@ -744,9 +706,8 @@
             });
 
             window.scrollTo(0, 0);
-            updateLanguage(currentLang); // Nastaví výchozí jazyk a naplní tooltipy
+            updateLanguage(currentLang);
 
-            // Event listenery pro tooltipy – přesunuté po inicializaci
             let activeTooltip = null;
             document.querySelectorAll('.tooltip').forEach(tooltip => {
                 const tooltipText = tooltip.querySelector('.tooltip-text');
