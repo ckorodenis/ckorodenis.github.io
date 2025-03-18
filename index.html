@@ -113,12 +113,33 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 40px;
-            height: 40px;
-            background: #FF00FF;
-            color: #000;
+            width: clamp(20px, 4vw, 40px); /* Responzivní šířka */
+            height: clamp(20px, 4vw, 40px); /* Responzivní výška */
+            background: #FF00FF; /* Magenta pozadí */
             border: none;
+            box-shadow: clamp(3px, 0.75vw, 5px) clamp(3px, 0.75vw, 5px) 0 #FFFFFF; /* Responzivní stín */
             cursor: crosshair;
+            padding: 0;
+            font-family: 'Roboto Mono', monospace; /* Retro font */
+            font-size: clamp(10px, 1.5vw, 16px); /* Responzivní velikost textu */
+            text-transform: uppercase;
+            transition: box-shadow 0.2s ease, transform 0.2s ease; /* Plynulé změny */
+        }
+
+        .lang-toggle .lang-text {
+            display: block;
+            color: #FFFFFF; /* Bílý text */
+            text-align: center;
+            line-height: clamp(20px, 4vw, 40px); /* Vycentrování podle výšky */
+        }
+
+        .lang-toggle:hover {
+            box-shadow: clamp(8px, 1vw, 10px) clamp(8px, 1vw, 10px) 0 #FFFFFF; /* Větší stín při najetí */
+        }
+
+        .lang-toggle:active {
+            box-shadow: clamp(1px, 0.25vw, 2px) clamp(1px, 0.25vw, 2px) 0 #FFFFFF; /* Menší stín při kliknutí */
+            transform: translate(clamp(1px, 0.25vw, 2px), clamp(1px, 0.25vw, 2px)); /* Responzivní posun */
         }
 
         @keyframes fadeIn {
@@ -233,6 +254,18 @@
             cursor: crosshair;
         }
 
+        .telegram-icon {
+            width: 100%; /* Vyplní tlačítko */
+            height: 100%;
+            padding: 5px; /* Malý okraj uvnitř tlačítka */
+            box-sizing: border-box; /* Aby padding ne přesáhl 40x40 */
+        }
+
+        /* Hover efekt – volitelné */
+        .social-btn:hover .telegram-icon {
+            opacity: 0.8; /* Lehké ztmavnutí při najetí */
+        }
+
         .contact-text {
             font-family: 'Roboto Mono', monospace;
             color: #FFFF00;
@@ -309,13 +342,38 @@
         }
 
         .tooltip-left .tooltip-text {
-            left: calc(40% + 100px);
-            transform: translateY(-50%);
+            left: 40%; /* Začne hned za textem */
+            margin-left: 10px; /* Malá mezera od textu */
         }
 
         .tooltip-right .tooltip-text {
-            right: calc(45% + 100px);
-            transform: translateY(-50%);
+            right: 40%; /* Začne hned před textem */
+            margin-right: 10px; /* Malá mezera od textu */
+        }
+
+        /* Responzivní úprava pro mobily */
+        @media (max-width: 768px) {
+            .tooltip .tooltip-text {
+                white-space: normal; /* Na mobilu povolíme zalamování textu */
+                max-width: 80vw; /* Zmenšíme šířku, aby se vešel */
+                font-size: clamp(10px, 3vw, 16px); /* Menší text na mobilu */
+            }
+
+            .tooltip-left .tooltip-text {
+                left: auto; /* Zrušíme pevnou pozici */
+                right: 0; /* Přilepíme k pravému okraji textu */
+                margin-left: 5px; /* Menší mezera na mobilu */
+                transform: none; /* Zrušíme vertikální posun */
+                top: 100%; /* Posuneme pod text místo vedle */
+            }
+
+            .tooltip-right .tooltip-text {
+                right: auto; /* Zrušíme pevnou pozici */
+                left: 0; /* Přilepíme k levému okraji textu */
+                margin-right: 5px; /* Menší mezera na mobilu */
+                transform: none; /* Zrušíme vertikální posun */
+                top: 100%; /* Posuneme pod text místo vedle */
+            }
         }
 
         .tooltip:hover .tooltip-text,
@@ -326,6 +384,7 @@
 </head>
 <body>
     <div>
+        <!-- Sekce 1 -->
         <div class="section section-1">
             <div class="logo">
                 <video id="logo-video" autoplay muted playsinline>
@@ -334,72 +393,85 @@
                 </video>
             </div>
             <div class="content hidden">
-                <button class="lang-toggle">CZ/EN</button>
-                <div class="typewriter">
-                    <span class="static-text"></span>
+                <button class="lang-toggle"><span class="lang-text">EN</span></button>
+                <div class="typewriter" data-section="section1">
+                    <span class="static-text" data-key="section1_static"></span>
                     <span class="dynamic-text"></span>
                 </div>
                 <div class="divider"></div>
             </div>
         </div>
 
+        <!-- Sekce 2 -->
         <div class="section section-2">
             <div class="content hidden">
-                <div>
-                    <div class="fade-text"><span class="tooltip tooltip-right" data-tooltip="Návrh / Kabeláž / Zapojení">Budování sítí</span><span class="tooltip tooltip-right" data-tooltip="Správa / Konzultace / Servis">IT Služby</span><span class="tooltip tooltip-right" data-tooltip="Konfigurace / Optimalizace">Software / Hardware</span><span class="tooltip tooltip-right" data-tooltip="Automatizované / Šifrované">Zálohování dat</span></div>
+                <div class="fade-text">
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_network">Budování sítí</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_it">IT Služby</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_swhw">Software / Hardware</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_backup">Zálohování dat</span></span>
                 </div>
                 <div class="divider"></div>
             </div>
         </div>
 
+        <!-- Sekce 3 -->
         <div class="section section-3">
             <div class="content hidden">
-                <div class="typewriter">
-                    <span class="tooltip tooltip-left" data-tooltip="Moderní / Lehký / Přehledný"><span class="static-text"></span></span>
-                    <span class="tooltip tooltip-left" data-tooltip="Scripty / Databáze / Automatizace"><span class="static-text"></span></span>
-                    <span class="tooltip tooltip-left" data-tooltip="Frontend / Backend / API"><span class="static-text"></span></span>
+                <div class="typewriter" data-section="section3">
+                    <span class="tooltip tooltip-left" data-tooltip-key="HTML5 / CSS / PHP"><span class="static-text" data-key="section3_static1"></span></span>
+                    <span class="tooltip tooltip-left" data-tooltip-key="Python / SQLite"><span class="static-text" data-key="section3_static2"></span></span>
+                    <span class="tooltip tooltip-left" data-tooltip-key="JS / TS / Node.js"><span class="static-text" data-key="section3_static3"></span></span>
                     <span class="dynamic-text"></span>
                 </div>
                 <div class="divider"></div>
             </div>
         </div>
 
+        <!-- Sekce 4 -->
         <div class="section section-4">
             <div class="content hidden">
-                <div>
-                    <div class="fade-text"><span class="tooltip tooltip-right" data-tooltip="Web / Aplikace / Hry">Integrace AI</span><span class="tooltip tooltip-right" data-tooltip="Decentralizace / Stabilita / Budoucnost">Web3 / DeWeb</span><span class="tooltip tooltip-right" data-tooltip="Smart_kontrakty / Nová_éra / NFT_Hry">SC / ASC / NFTs</span><span class="tooltip tooltip-right" data-tooltip="Vývoj / Scénáře / Level_design">Herní mechaniky</span><span class="tooltip tooltip-right" data-tooltip="Vzdělávání / Naše_budoucnost">AI pro děti</span></div>
-                </div>    
+                <div class="fade-text">
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section4_ai">Integrace AI</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section4_web3">Web3 / DeWeb</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section4_nft">SC / ASC / NFTs</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section4_game">Herní mechaniky</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section4_aikids">AI pro děti</span></span>
+                </div>
                 <div class="divider"></div>
             </div>
         </div>
 
+        <!-- Sekce 5 -->
         <div class="section section-5">
             <div class="content hidden">
-                <div class="contact">
-                    <div class="social-buttons">
-                        <div class="contact-row tooltip tooltip-left" data-tooltip="Poptávky / Nabídky / Texty">
-                            <div class="social-btn">✉️</div>
-                            <span class="contact-text">napis@0null.cz</span>
-                            <button class="copy-btn" data-copy="napis@0null.cz">⧉</button>
-                        </div>
-                        <div class="contact-row tooltip tooltip-left" data-tooltip="Nálehavé / Rychlé_řešení / Konzultace">
-                            <div class="social-btn">📞</div>
-                            <span class="contact-text">720210516</span>
-                            <button class="copy-btn" data-copy="720210516">⧉</button>
-                        </div>
-                        <div class="social-row">
-                            <a href="#" class="social-btn">𝕏</a>
-                            <a href="#" class="social-btn">𝕃𝕚</a>
-                        </div>
+                <div class="social-buttons">
+                    <div class="contact-row tooltip tooltip-left" data-tooltip-key="email_tooltip">
+                        <div class="social-btn">✉️</div>
+                        <span class="contact-text" data-key="email_label">napis@0null.cz</span>
+                        <button class="copy-btn" data-copy="napis@0null.cz">⧉</button>
+                    </div>
+                    <div class="contact-row tooltip tooltip-left" data-tooltip-key="phone_tooltip">
+                        <div class="social-btn">📞</div>
+                        <span class="contact-text" data-key="phone_label">720210516</span>
+                        <button class="copy-btn" data-copy="720210516">⧉</button>
+                    </div>
+                    <div class="social-row">
+                        <a href="#" class="social-btn tooltip tooltip-left" data-tooltip-key="social_x_tooltip">𝕏</a>
+                        <a href="#" class="social-btn tooltip tooltip-left" data-tooltip-key="social_li_tooltip">𝕃𝕚</a>
+                        <a href="https://t.me/CkoroDenis" class="social-btn">
+                            <img src="telegram.png" class="telegram-icon">
+                        </a>
                     </div>
                 </div>
                 <div class="divider"></div>
             </div>
         </div>
 
+        <!-- Sekce 6 -->
         <div class="section section-6">
             <div class="content hidden">
-                <p>© 2025 | 0NULL</p>
+                <p data-key="footer">© 2025 | 0NULL</p>
             </div>
         </div>
     </div>
@@ -409,32 +481,119 @@
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
         }
-    
-        // Okamžitý posun na začátek při načtení DOMu
-        document.addEventListener("DOMContentLoaded", function () {
-            window.scrollTo(0, 0); // Pojistka hned po načtení DOMu
-            const contents = document.querySelectorAll(".content");
-    
-    
-            // ... zbytek setTimeoutů beze změny
-        });
-    
-        // Posun na začátek po úplném načtení (včetně videa)
-        window.onload = function() {
-            window.scrollTo(0, 0); // Druhá pojistka po načtení všech zdrojů
+
+        // Překladový objekt
+        const translations = {
+            "cs": {
+                "section1_static": "Návrh / Realizace / Údržba",
+                "section1_dynamic": ["SW/HW", "IT_Služby", "HTML5", "Zálohování", "Servery", "Integrace_AI", "Domácí_sítě", "Programování", "Optimalizace"],
+                "section2_network": "Budování sítí",
+                "section2_it": "IT Služby",
+                "section2_swhw": "Software / Hardware",
+                "section2_backup": "Zálohování dat",
+                "section2_fade": {
+                    "Budování sítí": "Návrh / Kabeláž / Zapojení",
+                    "IT Služby": "Správa / Konzultace / Servis",
+                    "Software / Hardware": "Konfigurace / Optimalizace",
+                    "Zálohování dat": "Automatizované / Šifrované"
+                },
+                "section3_static1": "HTML5 / CSS / PHP",
+                "section3_static2": "Python / SQLite",
+                "section3_static3": "JS / TS / Node.js",
+                "section3_dynamic": ["Design", "WebApp", "Testing", "Automation", "LevelDesign", "UI", "Scripting", "NFTs", "UX", "Server", "Prototyping", "Backend", "Web3", "GameMechanics", "API", "Optimization", "Frontend", "Database", "Debugging"],
+                "section3_tooltips": {
+                    "HTML5 / CSS / PHP": "Moderní / Lehký / Přehledný",
+                    "Python / SQLite": "Scripty / Databáze / Automatizace",
+                    "JS / TS / Node.js": "Frontend / Backend / API"
+                },
+                "section4_ai": "Integrace AI",
+                "section4_web3": "Web3 / DeWeb",
+                "section4_nft": "SC / ASC / NFTs",
+                "section4_game": "Herní mechaniky",
+                "section4_aikids": "AI pro děti",
+                "section4_fade": {
+                    "Integrace AI": "Web / Aplikace / Hry",
+                    "Web3 / DeWeb": "Decentralizace / Stabilita / Budoucnost",
+                    "SC / ASC / NFTs": "Smart_kontrakty / Nová_éra / NFT_Hry",
+                    "Herní mechaniky": "Vývoj / Scénáře / Level_design",
+                    "AI pro děti": "Vzdělávání / Naše_budoucnost"
+                },
+                "email_label": "napis@0null.cz",
+                "email_tooltip": "Poptávky / Nabídky / Texty",
+                "phone_label": "720210516",
+                "phone_tooltip": "Nálehavé / Rychlé_řešení / Konzultace",
+                "social_x_tooltip": "Profil nedostupný",
+                "social_li_tooltip": "Profil nedostupný",
+                "footer": "© 2025 | 0NULL"
+            },
+            "en": {
+                "section1_static": "Design / Implementation / Maintenance",
+                "section1_dynamic": ["SW/HW", "IT_Services", "HTML5", "Backup", "Servers", "AI_Integration", "Home_Networks", "Programming", "Optimization"],
+                "section2_network": "Network Building",
+                "section2_it": "IT Services",
+                "section2_swhw": "Software / Hardware",
+                "section2_backup": "Data Backup",
+                "section2_fade": {
+                    "Network Building": "Design / Cabling / Installation",
+                    "IT Services": "Management / Consulting / Support",
+                    "Software / Hardware": "Configuration / Optimization",
+                    "Data Backup": "Automated / Encrypted"
+                },
+                "section3_static1": "HTML5 / CSS / PHP",
+                "section3_static2": "Python / SQLite",
+                "section3_static3": "JS / TS / Node.js",
+                "section3_dynamic": ["Design", "WebApp", "Testing", "Automation", "LevelDesign", "UI", "Scripting", "NFTs", "UX", "Server", "Prototyping", "Backend", "Web3", "GameMechanics", "API", "Optimization", "Frontend", "Database", "Debugging"],
+                "section3_tooltips": {
+                    "HTML5 / CSS / PHP": "Modern / Lightweight / Clear",
+                    "Python / SQLite": "Scripts / Databases / Automation",
+                    "JS / TS / Node.js": "Frontend / Backend / API"
+                },
+                "section4_ai": "AI Integration",
+                "section4_web3": "Web3 / DeWeb",
+                "section4_nft": "SC / ASC / NFTs",
+                "section4_game": "Game Mechanics",
+                "section4_aikids": "AI for Kids",
+                "section4_fade": {
+                    "AI Integration": "Web / Apps / Games",
+                    "Web3 / DeWeb": "Decentralization / Stability / Future",
+                    "SC / ASC / NFTs": "Smart_Contracts / New_Era / NFT_Games",
+                    "Game Mechanics": "Development / Scenarios / Level_Design",
+                    "AI for Kids": "Education / Our_Future"
+                },
+                "email_label": "napis@0null.cz",
+                "email_tooltip": "Inquiries / Offers / Texts",
+                "phone_label": "720210516",
+                "phone_tooltip": "Czech_only_please",
+                "social_x_tooltip": "Profile unavailable",
+                "social_li_tooltip": "Profile unavailable",
+                "footer": "© 2025 | 0NULL"
+            }
         };
 
-        // Typewriter funkce (beze změny)
+        let currentLang = 'cs'; // Výchozí jazyk
+        const typewriterInstances = new Map(); // Pro ukládání typewriter timeoutů
+
+        // Typewriter funkce s možností zastavení
         function typeWord(element, words) {
+            // Zastavíme předchozí instanci
+            if (typewriterInstances.has(element)) {
+                const timeouts = typewriterInstances.get(element);
+                timeouts.forEach(timeout => clearTimeout(timeout));
+                typewriterInstances.delete(element);
+            }
+
             let wordIndex = 0;
             let charIndex = 0;
             let currentWord = '';
             let isDeleting = false;
-    
+            const timeouts = [];
+
+            element.innerHTML = ''; // Vyčistíme obsah
             const cursor = document.createElement('span');
             cursor.classList.add('cursor');
             element.appendChild(cursor);
-    
+            element.insertBefore(document.createTextNode(''), cursor);
+
             function type() {
                 currentWord = words[wordIndex];
                 if (isDeleting) {
@@ -442,152 +601,221 @@
                     if (charIndex < 0) {
                         isDeleting = false;
                         wordIndex = (wordIndex + 1) % words.length;
-                        setTimeout(type, 500);
+                        timeouts.push(setTimeout(type, 500));
                     } else {
-                        setTimeout(type, 100);
+                        timeouts.push(setTimeout(type, 100));
                     }
                 } else {
                     element.childNodes[0].textContent = currentWord.substring(0, charIndex++);
                     if (charIndex > currentWord.length) {
                         isDeleting = true;
-                        setTimeout(type, 2000);
+                        timeouts.push(setTimeout(type, 2000));
                     } else {
-                        setTimeout(type, 100);
+                        timeouts.push(setTimeout(type, 100));
                     }
                 }
             }
-    
-            element.insertBefore(document.createTextNode(''), cursor);
-            type();
+
+            timeouts.push(setTimeout(type, 100));
+            typewriterInstances.set(element, timeouts);
         }
-    
+
+        // Funkce pro aktualizaci textů
+        function updateLanguage(lang) {
+            currentLang = lang;
+
+            // Statické texty (včetně Sekce 2 a 4)
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            // Tooltipy – aktualizace obsahu
+            document.querySelectorAll('.tooltip').forEach(tooltip => {
+                const mainTextElement = tooltip.querySelector('.main-text');
+                const key = mainTextElement ? mainTextElement.getAttribute('data-key') : null;
+                const tooltipKey = tooltip.getAttribute('data-tooltip-key');
+
+                const tooltipText = tooltip.querySelector('.tooltip-text');
+                if (tooltipText) {
+                    let words;
+                    if (tooltip.closest('.section-2') && key) {
+                        // Sekce 2: Tooltip podle přeloženého textu z data-key
+                        const translatedText = translations[lang][key];
+                        words = translations[lang].section2_fade[translatedText];
+                    } else if (tooltip.closest('.section-4') && key) {
+                        // Sekce 4: Tooltip podle přeloženého textu z data-key
+                        const translatedText = translations[lang][key];
+                        words = translations[lang].section4_fade[translatedText];
+                    } else if (tooltip.closest('.section-3') && tooltipKey) {
+                        // Sekce 3: Tooltip podle data-tooltip-key
+                        words = translations[lang].section3_tooltips[tooltipKey];
+                    } else if (tooltip.closest('.section-5') && tooltipKey) {
+                        // Sekce 5: Tooltip podle data-tooltip-key přímo v translations
+                        words = translations[lang][tooltipKey];
+                    } else if (tooltipKey) {
+                        // Fallback pro jiné tooltipy s data-tooltip-key
+                        words = translations[lang][tooltipKey];
+                    }
+
+                    // Nastavení obsahu tooltipu
+                    if (words) {
+                        tooltipText.innerHTML = words.split(' ').map(word => `<span class="word">${word}</span>`).join('');
+                    } else {
+                        console.warn(`Tooltip content not found for key: ${key || tooltipKey}`);
+                    }
+                }
+            });
+
+            // Restart typewriterů
+            const section1Dynamic = document.querySelector('.section-1 .dynamic-text');
+            const section3Dynamic = document.querySelector('.section-3 .dynamic-text');
+            typeWord(section1Dynamic, translations[lang].section1_dynamic);
+            typeWord(section3Dynamic, translations[lang].section3_dynamic);
+        }
+
+
+       
+
         // Přepínání jazyka
         const langToggle = document.querySelector('.lang-toggle');
+        const langText = langToggle.querySelector('.lang-text');
         langToggle.addEventListener('click', () => {
-            langToggle.textContent = langToggle.textContent === 'CZ/EN' ? 'EN/CZ' : 'CZ/EN';
+            const newLang = currentLang === 'cs' ? 'en' : 'cs';
+            langText.textContent = newLang === 'cs' ? 'EN' : 'CZ';
+            updateLanguage(newLang);
         });
-    
-        // Tooltip inicializace
-        document.querySelectorAll('.tooltip').forEach(tooltip => {
-            const tooltipText = document.createElement('span');
-            tooltipText.classList.add('tooltip-text');
-            
-            const tooltipContent = tooltip.getAttribute('data-tooltip');
-            if (tooltipContent) {
-                const words = tooltipContent.split(' ');
-                tooltipText.innerHTML = words.map(word => `<span class="word">${word}</span>`).join('');
-            }
-            
-            tooltip.appendChild(tooltipText);
-    
-            const section = tooltip.closest('.section');
-            if (section && (section.classList.contains('section-2') || section.classList.contains('section-4'))) {
-                tooltip.classList.add('tooltip-right');
-            } else {
-                tooltip.classList.add('tooltip-left');
-            }
-        });
-    
-        // Logika pro trvalé tooltipy a kopírování
+
+        
+
         let activeTooltip = null;
-    
         document.querySelectorAll('.tooltip').forEach(tooltip => {
             const tooltipText = tooltip.querySelector('.tooltip-text');
-    
             tooltip.addEventListener('mouseenter', () => {
                 if (activeTooltip && activeTooltip !== tooltipText) {
                     activeTooltip.style.visibility = 'hidden';
                 }
                 tooltipText.style.visibility = 'visible';
                 activeTooltip = tooltipText;
+                setTimeout(() => {
+                    tooltipText.style.visibility = 'hidden';
+                    if (activeTooltip === tooltipText) activeTooltip = null;
+                }, 3000);
             });
-    
+            tooltip.addEventListener('mouseleave', () => {
+                tooltipText.style.visibility = 'hidden';
+                if (activeTooltip === tooltipText) activeTooltip = null;
+            });
             tooltip.addEventListener('click', () => {
                 if (activeTooltip && activeTooltip !== tooltipText) {
                     activeTooltip.style.visibility = 'hidden';
                 }
                 tooltipText.style.visibility = 'visible';
                 activeTooltip = tooltipText;
+                setTimeout(() => {
+                    tooltipText.style.visibility = 'hidden';
+                    if (activeTooltip === tooltipText) activeTooltip = null;
+                }, 3000);
             });
         });
-    
+
         // Kopírování při kliknutí na tlačítko
         document.querySelectorAll('.copy-btn').forEach(copyBtn => {
             copyBtn.addEventListener('click', () => {
                 const textToCopy = copyBtn.getAttribute('data-copy');
                 navigator.clipboard.writeText(textToCopy).then(() => {
                     copyBtn.textContent = '✅';
-                    setTimeout(() => {
-                        copyBtn.textContent = '⧉';
-                    }, 1000);
+                    setTimeout(() => copyBtn.textContent = '⧉', 1000);
                 });
             });
         });
-    
-        // Umožnění výběru textu v tooltipu
-        document.querySelectorAll('.tooltip-text').forEach(tooltipText => {
-            tooltipText.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-            });
-        });
-    
-        // Postupné zobrazení sekcí a inicializace typewriteru
+
+        // Inicializace tooltipů a stránky
         document.addEventListener("DOMContentLoaded", function () {
+            // Vytvoření tooltip-text elementů
+            document.querySelectorAll('.tooltip').forEach(tooltip => {
+                if (!tooltip.querySelector('.tooltip-text')) {
+                    const tooltipText = document.createElement('span');
+                    tooltipText.classList.add('tooltip-text');
+                    tooltip.appendChild(tooltipText);
+                }
+            });
+
+            window.scrollTo(0, 0);
+            updateLanguage(currentLang); // Nastaví výchozí jazyk a naplní tooltipy
+
+            // Event listenery pro tooltipy – přesunuté po inicializaci
+            let activeTooltip = null;
+            document.querySelectorAll('.tooltip').forEach(tooltip => {
+                const tooltipText = tooltip.querySelector('.tooltip-text');
+                tooltip.addEventListener('mouseenter', () => {
+                    if (activeTooltip && activeTooltip !== tooltipText) {
+                        activeTooltip.style.visibility = 'hidden';
+                    }
+                    tooltipText.style.visibility = 'visible';
+                    activeTooltip = tooltipText;
+                    setTimeout(() => {
+                        tooltipText.style.visibility = 'hidden';
+                        if (activeTooltip === tooltipText) activeTooltip = null;
+                    }, 3000);
+                });
+                tooltip.addEventListener('mouseleave', () => {
+                    tooltipText.style.visibility = 'hidden';
+                    if (activeTooltip === tooltipText) activeTooltip = null;
+                });
+                tooltip.addEventListener('click', () => {
+                    if (activeTooltip && activeTooltip !== tooltipText) {
+                        activeTooltip.style.visibility = 'hidden';
+                    }
+                    tooltipText.style.visibility = 'visible';
+                    activeTooltip = tooltipText;
+                    setTimeout(() => {
+                        tooltipText.style.visibility = 'hidden';
+                        if (activeTooltip === tooltipText) activeTooltip = null;
+                    }, 3000);
+                });
+            });
+
             const contents = document.querySelectorAll(".content");
-    
-            // Sekce 1 – inicializace typewriteru po zobrazení
-            setTimeout(function () {
+
+            setTimeout(() => {
                 contents[0].classList.remove("hidden");
                 contents[0].classList.add("visible");
-    
-                const writer1 = contents[0].querySelector('.typewriter');
-                const staticTexts1 = writer1.querySelectorAll('.static-text');
-                const dynamicText1 = writer1.querySelector('.dynamic-text');
-                staticTexts1[0].textContent = "Návrh / Realizace / Údržba";
-                const words1 = ["SW/HW", "IT_Služby", "HTML5", "Zálohování", "Servery", "Integrace_AI", "Domácí_sítě", "Programování", "Optimalizace"];
-                typeWord(dynamicText1, words1);
-            }, 5000); // 5s
-    
-            // Sekce 2
-            setTimeout(function () {
+                const writer1 = contents[0].querySelector('.dynamic-text');
+                typeWord(writer1, translations[currentLang].section1_dynamic);
+            }, 5000);
+
+            setTimeout(() => {
                 contents[1].classList.remove("hidden");
                 contents[1].classList.add("visible");
-            }, 6000); // 6s
-    
-            // Sekce 3 – inicializace typewriteru po zobrazení
-            setTimeout(function () {
+            }, 6000);
+
+            setTimeout(() => {
                 contents[2].classList.remove("hidden");
                 contents[2].classList.add("visible");
-    
-                const writer3 = contents[2].querySelector('.typewriter');
-                const staticTexts3 = writer3.querySelectorAll('.static-text');
-                const dynamicText3 = writer3.querySelector('.dynamic-text');
-                staticTexts3[0].textContent = "HTML5 / CSS / PHP";
-                staticTexts3[1].textContent = "Python / SQLite";
-                staticTexts3[2].textContent = "JS / TS / Node.js";
-                const words3 = ["Design", "WebApp", "Testing", "Automation", "LevelDesign", "UI", "Scripting", "NFTs", "UX", "Server", 
-                    "Prototyping", "Backend", "Web3", "GameMechanics", "API", "Optimization", "Frontend", "Database", "Debugging"];
-                typeWord(dynamicText3, words3);
-            }, 7000); // 7s
-    
-            // Sekce 4
-            setTimeout(function () {
+                const writer3 = contents[2].querySelector('.dynamic-text');
+                typeWord(writer3, translations[currentLang].section3_dynamic);
+            }, 7000);
+
+            setTimeout(() => {
                 contents[3].classList.remove("hidden");
                 contents[3].classList.add("visible");
-            }, 8000); // 8s
-    
-            // Sekce 5
-            setTimeout(function () {
+            }, 8000);
+
+            setTimeout(() => {
                 contents[4].classList.remove("hidden");
                 contents[4].classList.add("visible");
-            }, 9000); // 9s
-    
-            // Sekce 6
-            setTimeout(function () {
+            }, 9000);
+
+            setTimeout(() => {
                 contents[5].classList.remove("hidden");
                 contents[5].classList.add("visible");
-            }, 10000); // 10s
+            }, 10000);
         });
+
+        window.onload = () => window.scrollTo(0, 0);
     </script>
 </body>
 </html>
