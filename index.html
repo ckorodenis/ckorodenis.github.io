@@ -417,17 +417,17 @@
             }
 
             .section-5 .tooltip-left .tooltip-text {
-                left: 110%;
+                left: 10%;
                 right: auto;
                 margin-left: 10px;
-                top: 50%;
+                top: 60px;
             }
 
             .section-5 .tooltip-right .tooltip-text {
                 left: auto;
-                right: 100%;
+                right: 10%;
                 margin-right: 10px;
-                top: 50%;
+                top: 60px;
             }
         }
 
@@ -439,7 +439,7 @@
         .refe-column {
             position: absolute;
             right: 50px;
-            top: 50%;
+            top: 70%;
             width: 50%;
             display: flex;
             flex-direction: column;
@@ -532,7 +532,7 @@
                         <button class="copy-btn" data-copy="720210516">⧉</button>
                     </div>
                     <div class="social-row">
-                        <a href="#" class="social-btn tooltip tooltip-left" data-tooltip-key="social_li_tooltip">𝕃𝕚</a>
+                        <div class="social-btn tooltip tooltip-left" data-tooltip-key="social_li_tooltip">𝕃𝕚</div>
                         <a href="https://t.me/CkoroDenis" class="social-btn tooltip tooltip-left" data-tooltip-key="social_tele_tooltip">
                             <img src="telegram.png" class="telegram-icon">
                         </a>
@@ -794,6 +794,8 @@
                 });
             });
         });
+
+        
 
         document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll('.tooltip').forEach(tooltip => {
