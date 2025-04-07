@@ -3,10 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>0NULL | Servis PC, Domácí sítě a Záloha dat</title>
-    <meta name="description" content="Servis PC, notebooků a domácích sítí od 0NULL. Řešení problémů s HW/SW, přeinstalace OS, zálohy dat, LAN rozvody a modernizace sítí.">
-    <meta name="keywords" content="servis PC, domácí sítě, záloha dat, modernizace sítí, LAN přípojky, UTP rozvody, přeinstalace systémů, řešení problémů HW SW, 0NULL">
+    <title>0NULL | Servis PC a Domácí sítě – Jablonec nad Nisou</title>
+    <meta name="description" content="Servis PC, notebooků a domácích sítí v Jablonci nad Nisou od 0NULL. Řešení problémů s HW/SW, přeinstalace OS, zálohy dat a LAN rozvody.">
+    <meta name="keywords" content="servis PC Jablonec nad Nisou, domácí sítě Jablonec nad Nisou, záloha dat, LAN rozvody Jablonec nad Nisou, oprava PC, přeinstalace systémů, řešení problémů HW SW, 0NULL">
     <meta name="author" content="0NULL">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://0null.cz">
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="0NULL | Servis PC a Domácí sítě – Jablonec nad Nisou">
+    <meta property="og:description" content="Servis PC a domácích sítí v Jablonci nad Nisou. Opravy HW/SW, zálohy dat, LAN rozvody – 0NULL.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://0null.cz">
+    <meta property="og:image" content="https://0null.cz/og-image.jpg">
+
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="0NULL | Servis PC a Domácí sítě – Jablonec nad Nisou">
+    <meta name="twitter:description" content="Servis PC a domácích sítí v Jablonci nad Nisou od 0NULL.">
+    <meta name="twitter:image" content="https://0null.cz/og-image.jpg">
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "0NULL",
+      "description": "Servis PC, notebooků a domácích sítí v Jablonci nad Nisou.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Jablonec nad Nisou",
+        "addressCountry": "CZ"
+      },
+      "telephone": "+420720210516",
+      "url": "https://0null.cz"
+    }
+    </script>
+        
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +50,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Tint&display=swap" rel="stylesheet">
 
     <style>
         * {
@@ -142,11 +181,6 @@
             transform: translate(clamp(1px, 0.25vw, 2px), clamp(1px, 0.25vw, 2px));
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         .typewriter {
             position: relative;
             font-size: clamp(14px, 4vw, 50px);
@@ -216,6 +250,7 @@
         }
 
         .social-buttons {
+            width: 50%;
             margin-top: 20px;
             display: flex;
             flex-direction: column;
@@ -227,6 +262,7 @@
             align-items: center;
             gap: 5px;
             position: relative;
+            width: auto;
         }
 
         .social-row {
@@ -270,7 +306,7 @@
             color: #FFFF00;
             border: none;
             padding: 5px;
-            cursor: cell;
+            cursor: crosshair;
             font-size: clamp(14px, 2vw, 20px);
             line-height: 1;
         }
@@ -326,7 +362,7 @@
             transform: translateY(-50%);
             font-size: clamp(12px, 2vw, 40px);
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             align-items: center;
             max-width: 90vw;
             white-space: nowrap;
@@ -334,13 +370,27 @@
         }
 
         .tooltip-left .tooltip-text {
-            left: 40%;
+            left: 45%;
             margin-left: 10px;
         }
 
         .tooltip-right .tooltip-text {
-            right: 40%;
+            right: 45%;
             margin-right: 10px;
+        }
+
+        .section-5 .tooltip-left .tooltip-text {
+            left: 100%;
+            margin-left: 55px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .section-5 .tooltip-right .tooltip-text {
+            right: 100%;
+            margin-right: 35px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         @media (max-width: 768px) {
@@ -365,11 +415,50 @@
                 transform: none;
                 top: 100%;
             }
+
+            .section-5 .tooltip-left .tooltip-text {
+                left: 110%;
+                right: auto;
+                margin-left: 10px;
+                top: 50%;
+            }
+
+            .section-5 .tooltip-right .tooltip-text {
+                left: auto;
+                right: 100%;
+                margin-right: 10px;
+                top: 50%;
+            }
         }
 
         .tooltip:hover .tooltip-text,
         .tooltip:active .tooltip-text {
             visibility: visible;
+        }
+
+        .refe-column {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .refe-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .refe-item {
+            color: #a20000;
+            font-family: "Bungee Tint", monospace;
+            font-size: clamp(26px, 2vw, 36px);
+            text-decoration: none;
+            cursor: crosshair;
         }
     </style>
 </head>
@@ -432,22 +521,26 @@
         <div class="section section-5">
             <div class="content hidden">
                 <div class="social-buttons">
-                    <div class="contact-row tooltip tooltip-left" data-tooltip-key="email_tooltip">
+                    <div class="contact-row">
                         <div class="social-btn">✉️</div>
-                        <span class="contact-text" data-key="email_label">napis@0null.cz</span>
-                        <button class="copy-btn" data-copy="napis@0null.cz">⧉</button>
+                        <span class="contact-text tooltip tooltip-left" data-key="email_label" data-tooltip-key="email_tooltip">ckorodenis@gmail.com</span>
+                        <button class="copy-btn" data-copy="ckorodenis@gmail.com">⧉</button>
                     </div>
-                    <div class="contact-row tooltip tooltip-left" data-tooltip-key="phone_tooltip">
+                    <div class="contact-row">
                         <div class="social-btn">📞</div>
-                        <span class="contact-text" data-key="phone_label">720210516</span>
+                        <span class="contact-text tooltip tooltip-left" data-key="phone_label" data-tooltip-key="phone_tooltip">720210516</span>
                         <button class="copy-btn" data-copy="720210516">⧉</button>
                     </div>
                     <div class="social-row">
-                        <a href="#" class="social-btn tooltip tooltip-left" data-tooltip-key="social_x_tooltip">𝕏</a>
                         <a href="#" class="social-btn tooltip tooltip-left" data-tooltip-key="social_li_tooltip">𝕃𝕚</a>
-                        <a href="https://t.me/CkoroDenis" class="social-btn">
+                        <a href="https://t.me/CkoroDenis" class="social-btn tooltip tooltip-left" data-tooltip-key="social_tele_tooltip">
                             <img src="telegram.png" class="telegram-icon">
                         </a>
+                    </div>
+                </div>
+                <div class="refe-column">
+                    <div class="refe-row">
+                        <a href="https://x.com/MW0rld_bot" class="refe-item tooltip tooltip-right" data-tooltip-key="mw0rld_tooltip">MW0rld</a>
                     </div>
                 </div>
                 <div class="divider"></div>
@@ -501,12 +594,13 @@
                     "Herní mechaniky": "Vývoj / Scénáře / Level_design",
                     "AI pro děti": "Vzdělávání / Naše_budoucnost"
                 },
-                "email_label": "napis@0null.cz",
+                "email_label": "ckorodenis@gmail.com",
                 "email_tooltip": "Poptávky / Nabídky / Texty",
                 "phone_label": "720210516",
                 "phone_tooltip": "Nálehavé / Rychlé_řešení / Konzultace",
-                "social_x_tooltip": "Profil nedostupný",
-                "social_li_tooltip": "Profil nedostupný",
+                "social_li_tooltip": "Profil_nedostupný",
+                "social_tele_tooltip": "@CkoroDenis",
+                "mw0rld_tooltip": "EpicTextGame / NFTs / Quests",
                 "footer": "© 2025 | 0NULL"
             },
             "en": {
@@ -543,12 +637,13 @@
                     "Game Mechanics": "Development / Scenarios / Level_Design",
                     "AI for Kids": "Education / Our_Future"
                 },
-                "email_label": "napis@0null.cz",
+                "email_label": "ckorodenis@gmail.com",
                 "email_tooltip": "Inquiries / Offers / Texts",
                 "phone_label": "720210516",
                 "phone_tooltip": "Czech_only_please",
-                "social_x_tooltip": "Profile unavailable",
-                "social_li_tooltip": "Profile unavailable",
+                "social_li_tooltip": "Profile_unavailable",
+                "social_tele_tooltip": "@CkoroDenis",
+                "mw0rld_tooltip": "EpicTextGame / NFTs / Quests",
                 "footer": "© 2025 | 0NULL"
             }
         };
@@ -616,28 +711,32 @@
                 const key = mainTextElement ? mainTextElement.getAttribute('data-key') : null;
                 const tooltipKey = tooltip.getAttribute('data-tooltip-key');
 
-                const tooltipText = tooltip.querySelector('.tooltip-text');
-                if (tooltipText) {
-                    let words;
-                    if (tooltip.closest('.section-2') && key) {
-                        const translatedText = translations[lang][key];
-                        words = translations[lang].section2_fade[translatedText];
-                    } else if (tooltip.closest('.section-4') && key) {
-                        const translatedText = translations[lang][key];
-                        words = translations[lang].section4_fade[translatedText];
-                    } else if (tooltip.closest('.section-3') && tooltipKey) {
-                        words = translations[lang].section3_tooltips[tooltipKey];
-                    } else if (tooltip.closest('.section-5') && tooltipKey) {
-                        words = translations[lang][tooltipKey];
-                    } else if (tooltipKey) {
-                        words = translations[lang][tooltipKey];
-                    }
+                let tooltipText = tooltip.querySelector('.tooltip-text');
+                if (!tooltipText) {
+                    tooltipText = document.createElement('span');
+                    tooltipText.classList.add('tooltip-text');
+                    tooltip.appendChild(tooltipText);
+                }
 
-                    if (words) {
-                        tooltipText.innerHTML = words.split(' ').map(word => `<span class="word">${word}</span>`).join('');
-                    } else {
-                        console.warn(`Tooltip content not found for key: ${key || tooltipKey}`);
-                    }
+                let words;
+                if (tooltip.closest('.section-2') && key) {
+                    const translatedText = translations[lang][key];
+                    words = translations[lang].section2_fade[translatedText];
+                } else if (tooltip.closest('.section-4') && key) {
+                    const translatedText = translations[lang][key];
+                    words = translations[lang].section4_fade[translatedText];
+                } else if (tooltip.closest('.section-3') && tooltipKey) {
+                    words = translations[lang].section3_tooltips[tooltipKey];
+                } else if (tooltip.closest('.section-5') && tooltipKey) {
+                    words = translations[lang][tooltipKey];
+                } else if (tooltipKey) {
+                    words = translations[lang][tooltipKey];
+                }
+
+                if (words) {
+                    tooltipText.innerHTML = words.split(' ').map(word => `<span class="word">${word}</span>`).join('');
+                } else {
+                    console.warn(`Tooltip content not found for key: ${key || tooltipKey}`);
                 }
             });
 
