@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII map of MW0rld</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #000000;
+            color: #2d87aa;
+        }
+        .map-container {
+            font-family: monospace;
+            padding-top: 120px;
+            padding-left: 10px;
+            width: max-content; /* Šířka kontejneru se přizpůsobí šířce okna */
+            height: max-content; /* Výška kontejneru se přizpůsobí výšce okna */
+            max-width: auto; /* Maximální šířka */
+            max-height: auto; /* Maximální výška */
+            border: 10px ridge rgba(63, 0, 55, 0.568);
+            overflow: hidden;
+            background-color: #000000;
+            position: relative;
+            touch-action: pan-x pan-y; /* Zamezuje zoomu */
+            transform-origin: top left; /* Nastaví počátek transformace */
+            transition: transform 0.3s; /* Plynulá animace */
+            white-space: pre;
+        }
+        .hidden {
+            display: none; /* Skryje prvek */
+        }
+
+        .map {
+            white-space: pre;
+            line-height: 0.8; /* Line height bude automaticky přizpůsoben velikosti písma */
+            font-size: 0.5vw; /* Velikost písma se přizpůsobí šířce okna */
+            touch-action: pan-x pan-y; /* Zamezuje zoomu */
+            font-family: monospace;
+            letter-spacing: 0.5vw; /* Mezera mezi znaky se přizpůsobí šířce okna */
+            transition: opacity 0.3s ease;
+        }
+        /* Nastavíme přechod pro plynulé zviditelňování */
+        .typing-text {
+            opacity: 0;  /* Zpočátku neviditelný */
+            transition: opacity 1.5s ease-in-out;  /* Plynulý přechod */
+        }
+        /* Vzhled kurzoru */
+        .cursor {
+            display: inline-block;
+            width: 1px;
+            background-color: #40E0D0; /* Tyrkysová barva */
+            height: 12px;
+            animation: blink 0.7s step-end infinite;
+            margin-left: 2px;  /* Mezera mezi znakem a kurzorem */
+        }
+        .write-text {
+            font-family: monospace;  /* Používáme monospace font pro efekt psaní */
+            font-size: 12px;         /* Nastavení velikosti písma */
+            color: #40E0D0;          /* Tyrkysová barva textu */
+            display: inline-block;   /* Aby text a kurzor byli na stejné linii */
+            opacity: 1;              /* Výchozí viditelnost textu */
+            transition: opacity 1s ease-in-out; /* Plynulý přechod pro zviditelnění */
+        }
+        /* Styl pro kurzor */
+        .rotatingcursor {
+            font-family: monospace;  /* Používáme monospace pro rovnoměrné písmo */
+            font-size: 12px;         /* Nastavení velikosti kurzoru */
+            color: #40E0D0;        /* Barva kurzoru (např. zelená) */
+            white-space: nowrap;     /* Zabrání zalomení textu */
+            display: inline-block;   /* Zajištění, že kurzor bude inline a nebude blokový */
+        }
+
+
+        /* Animace blikání kurzoru */
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+        .header-container {
+            position: fixed;
+            top: 10px;
+            left: 25px;
+            z-index: 1000;
+            padding: 20px;
+            display: flex;
+            background-color: #161616;
+            border-radius: 25px;
+            box-shadow: 0px 10px 14px rgb(110, 0, 96);
+            display: flex; /* Flexbox pro umístění vedle sebe */
+            touch-action: pan-x pan-y; /* Zamezuje zoomu */
+            align-items: center; /* Vertikální zarovnání na střed */
+            gap: 20px; /* Mezera mezi nadpisem a tlačítky */
+            margin-top: 20px; /* Odsazení od horního okraje stránky */
+            flex-wrap: wrap; /* Zajistí, že obsah přejde na nový řádek, pokud je potřeba */
+            width: auto;
+            flex-direction: row;
+        }
+        .header-bar {
+            display: none;
+        }
+        /* Styly pro ASCII mapu a titulek */
+        #ascii-mapof, #ascii-title {
+            font-size: 8px; /* Zmenšené písmo pro lepší přizpůsobení */
+            white-space: pre;
+            display: inline-block;
+            text-align: center;
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Mezera mezi sloupci */
+        }
+        .button-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .button-column button {
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 1.8s ease, color 1s ease, border-radius 0.4s ;
+        }
+
+        .swap-button {
+            background-color: #002350;
+            color: rgb(153, 168, 16);
+            font-weight: bold;
+        }
+        .swap-button:hover {
+            background-color: #445094;
+            color: rgb(255, 109, 109);
+            border-radius: 50px;
+        }
+
+        .x-button {
+            background-color: #600097;
+            color: rgb(0, 135, 139);
+            font-weight: bold;
+        }
+        .x-button:hover {
+            background-color: #db4cff;
+            color: #00ff00;
+            border-radius: 50px;
+        }
+
+        .tele-button {
+            background-color: #004439;
+            color: rgb(110, 0, 96);
+            font-weight: bold;
+        }
+        .tele-button:hover {
+            background-color: #00ffaa;
+            color: #fbff00;
+            border-radius: 50px;
+        }
+
+        .change-button {
+            background-color: #5f0000;
+            color: rgb(0, 156, 122);
+            font-weight: bold;
+        }
+        .change-button:hover {
+            background-color: hsl(22, 100%, 55%);
+            color: #ffd000;
+            border-radius: 50px;
+        }
+        #changeButton span:first-child {
+            font-size: 0.8em; /* Menší písmo pro konstantní nápis */
+            color: #bbbbbb; /* Tmavší barva pro konstantní text */
+        }
+        #changeButton span:last-child {
+            font-size: 1em; /* Zvýraznění pro název vrstvy */
+            font-weight: bold;
+        }
+
+        .how-button {
+            background-color: #006315;
+            color: rgb(95, 140, 207);
+            font-weight: bold;
+        }
+        .how-button:hover {
+            background-color: hsl(22, 100%, 55%);
+            color: #00165f;
+            border-radius: 50px;
+        }
+
+        .info-button {
+            background-color: #006315;
+            color: rgb(95, 140, 207);
+            font-weight: bold;
+        }
+        .info-button:hover {
+            background-color: hsl(22, 100%, 55%);
+            color: #00165f;
+            border-radius: 50px;
+        }
+
+        .minus-button {
+            background-color: #5e0000;
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+        }
+        .minus-button:hover {
+            background-color: hsl(0, 100%, 73%);
+            color: #000000;
+            border-radius: 50px;
+        }
+
+        .plus-button {
+            background-color: #5e0000;
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+        }
+        .plus-button:hover {
+            background-color: hsl(22, 100%, 55%);
+            color: #000000;
+            border-radius: 50px;
+        }
+        .nft-button {
+            background-color: #28335a;
+            color: rgb(218, 221, 51);
+            font-weight: bold;
+        }
+        .nft-button:hover {
+            background-color: hsl(162, 70%, 71%);
+            color: #000000;
+            border-radius: 50px;
+        }
+
+
+        /* Styl pro mobilní zařízení */
+        @media screen and (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            /* Zmenší font a nadpisy */
+            #ascii-mapof, #ascii-title {
+                font-size: 6px !important;
+            }
+
+            /* Přizpůsobí tlačítka do dvou sloupců */
+            .button-container {
+                display: grid;
+                grid-template-columns: repeat(2, auto); /* Dvě tlačítka vedle sebe */
+                gap: 4px;
+            }
+
+            /* Menší tlačítka pro mobil */
+            button {
+                padding: 6px 10px;
+                font-size: 10px;
+            }
+            .write-text {
+                font-size: 5px;         /* Nastavení velikosti písma */
+            }
+            .cursor {
+                height: 5px;
+            }
+            .rotatingcursor {
+                font-size: 5px;         /* Nastavení velikosti kurzoru */
+            }
+
+            /* Skrytí obsahu, když je sbalený */
+            .header-container.collapsed {
+                height: 50px; /* Výška lišty (můžete upravit) */
+                width: 25px;
+                overflow: hidden;
+                transition: height 1.2s ease;
+            }
+
+            .header-container {
+                transition: height 1.2s ease; /* Plynulé přechody */
+            }
+
+            /* Tlačítko lišty */
+            .header-container.collapsed .header-bar {
+                display: block;
+            }
+
+            .header-container .header-bar {
+                display: none; /* Bude skryto, dokud není container sbalený */
+                background-color: #161616;
+                color: #2d87aa;
+                text-align: center;
+                padding: 10px;
+                cursor: pointer;
+            }
+        }
+
+        /* Barvy pro jednotlivé terény */
+        .background { /* Pozadí */
+            background-color: #e6e200; 
+            color: #00165f;             
+        }
+        .construction { /* Výstavba */
+            background-color: #000000; 
+            color: #ff5d5d;             
+        }
+        .volcano { /* Sopka */
+            background-color: #6b0000; 
+            color: #7e7e7e;             
+        }
+        .forest { /* Les */
+            background-color: #075000; 
+            color: #979138;             
+        }
+        .river { /* Řeka */
+            background-color: #0b00a8; 
+            color: #00ffd5;             
+        }
+        .forest2 { /* Les2 */
+            background-color: #086300; 
+            color: #06a700;             
+        }
+        .river2 { /* Řeka2 */
+            background-color: #00f7ff; 
+            color: #002fff;             
+        }
+        .stone { /* Kámen */
+            background-color: #949494; 
+            color: #000000;             
+        }
+        .lava { /* Láva */
+            background-color: #ff0000; 
+            color: #ff5858;             
+        }
+        .border { /* Okraj */
+            background-color: #350061; 
+            color: #9615ff;             
+        }
+        
+
+        /* Modalní okno (dialog) */
+        .modal {
+            visibility: hidden; /* Skryté, dokud není otevřené */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            opacity: 0; /* Skryté, než se objeví */
+            transition: opacity 0.8s ease; /* Plynulý přechod pro zobrazení */
+        }
+        .modal.active {
+           visibility: visible; /* Zobrazí se pouze když má třídu active */
+           opacity: 1;
+           transition: opacity 0.8s ease, visibility 0s;
+        }
+        .modal.closing {
+            opacity: 0;
+            visibility: visible; /* Visibility zůstane, dokud se animace nedokončí */
+            transition: opacity 0.8s ease, visibility 0s linear 0.8s;
+        }
+        .modal-content {
+            background-color: #000000;
+            margin: 5% auto;
+            padding: 20px;
+            border: 5px solid #216141;
+            width: 80%;
+            max-width: 500px;
+            max-height: 80%; /* Zvýšení pro lepší posouvání */
+            text-align: left;
+            border-radius: 10px;
+            overflow-y: auto; /* Umožní posuv */
+            background: linear-gradient(135deg, #002914, #000000);
+            background-size: 400% 400%; /* Nastavíme větší velikost pro plynulé posouvání */
+            animation: backgroundAnimation 10s ease infinite; /* Jemná animace pozadí */
+            transition: transform 1.3s ease, opacity 1.3s ease; /* Přechod pro hladší animaci */
+            transform: scale(0.9); /* Počáteční zmenšení */
+            opacity: 0; /* Skrytí na počátku */
+        }
+        .modal.active .modal-content {
+            transform: scale(1); /* Konečná velikost při zobrazení */
+            opacity: 1;
+        }
+        
+        @keyframes backgroundAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .close {
+            color: #49a175;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: #ff7f7f;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="header-bar" onclick="toggleHeader()">
+            |<br>
+            V
+        </div>
+    
+        <pre id="ascii-mapof" style="font-size: 10px; line-height: 1; white-space: pre; text-align: left; color: #40E0D0;">
+      __  _ ___ ___                        _
+ /\  (_  /   |   |    ._ _   _. ._     _ _|_
+/--\ __) \_ _|_ _|_   | | | (_| |_)   (_) | 
+                                |           
+        </pre>
+        <a href="index.html" style="color:#40E0D0">
+        <pre id="ascii-title" style="font-size: 10px; line-height: 1; white-space: pre; text-align: left; display: inline-block;">
+    M     M  W     W  000000   RRRRRR   L     DDDDD
+    MM   MM  W     W  0    0   R    R   L     D    D
+    M M M M  W  W  W  0    0   RRRRRR   L     D     D
+    M  M  M   W W W   0    0   R   R    L     D    D
+    M     M    W W    000000   R    R   LLLLL DDDDD
+        </pre></a>
+        <div class="button-container">
+            <div class="button-column">
+                <button class="swap-button" id="swapButton" onclick="changeButtonTextMap()">Star Map</button>
+                <button class="change-button" id="changeButton" onclick="changeButtonText()">Change Map</button>
+            </div>
+            <div class="button-column">
+                <button class="x-button" id="xButton" onclick="openXProfile()">X Profile</button>
+                <button class="tele-button" id="teleButton" onclick="openTeleGame()">Go to Game</button>
+            </div>
+            <div class="button-column">
+                <button class="how-button" id="how-button" onclick="how()">How?</button>
+                <button class="plus-button" id="plus-button" onclick="plus()">+ + +</button>
+            </div>
+            <div class="button-column">
+                <button class="info-button" id="info-button" onclick="info()">Info</button>
+                <button class="minus-button" id="minus-button" onclick="minus()">- - -</button>
+            </div>
+            <div class="button-column">
+                <button class="nft-button" id="nftButton" onclick="openNFTModal()">NFT Items</button>
+            </div>
+        </div>
+    </div>
+    <div class="map-container" id="mapContainer">
+        <div class="map" id="map">
+
+
+
+
+
+
+
+
+
+..................................................................................................................................................<br>
+..%%..%%..%%..%%..%%%%%...%%%%%%..%%%%%............%%%%....%%%%...%%..%%...%%%%...%%%%%%..%%%%%...%%..%%...%%%%...%%%%%%..%%%%%%...%%%%...%%..%%..<br>
+..%%..%%..%%%.%%..%%..%%..%%......%%..%%..........%%..%%..%%..%%..%%%.%%..%%........%%....%%..%%..%%..%%..%%..%%....%%......%%....%%..%%..%%%.%%..<br>
+..%%..%%..%%.%%%..%%..%%..%%%%....%%%%%...........%%......%%..%%..%%.%%%...%%%%.....%%....%%%%%...%%..%%..%%........%%......%%....%%..%%..%%.%%%..<br>
+..%%..%%..%%..%%..%%..%%..%%......%%..%%..........%%..%%..%%..%%..%%..%%......%%....%%....%%..%%..%%..%%..%%..%%....%%......%%....%%..%%..%%..%%..<br>
+...%%%%...%%..%%..%%%%%...%%%%%%..%%..%%...........%%%%....%%%%...%%..%%...%%%%.....%%....%%..%%...%%%%....%%%%.....%%....%%%%%%...%%%%...%%..%%..<br>
+..................................................................................................................................................<br>
+..................................................................................................................................................<br>
+..................................................................................................................................................<br><br>
+        <div class="map" id="map-present">
+IIIIIIIIIIIIIII..............................................................<br>
+IIIIIIIIIIIIIII....................................................,,,,,,^^^^<br>
+IIIIIIIIIIIIIII....VV..VV...VVVV...VV.......VVVV....VVVV...VV..VV,,,VVVV,,,^^<br>
+IIIIIIIIIIIIIII....VV..VV..VV..VV..VV......VV..VV..VV..VV..VVV.VV,,VVUUVV,,^^<br>
+IIIIIIIIIIIIIII....VV..VV..VV..VV..VV......VV......VVVVVV..VV.VVV,,VVUUVV,,^^<br>
+IIIIIIIIIIIIIII.....VVVV...VV..VV..VV......VV..VV..VV..VV..VV..VV,,VVUUVV,,^^<br>
+IIIIIIIIIIIIIII......VV.....VVVV...VVVVVV...VVVV...VV..VV..VV..VV,,,VVVV,,,^^<br>
+IIIIIIIIIIIIIII....................................................,,,,,,^^^^<br>
+IIIIIIIIIIIIIII....FFFFFF...FFFF...FFFFF...FFFFFF...FFFF...FFFFFF.^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....FF......FF..FF..FF..FF..FF......FF........FF..^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....FFFF....FF..FF..FFFFF...FFFF.....FFFF.....FF..^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....FF......FF..FF..FF..FF..FF..........FF....FF..^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....FF.......FFFF...FF..FF..FFFFFF...FFFF.....FF..^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII...........................................^^^^^^^^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....RRRRR...RRRRRR..RR..RR..RRRRRR..RRRRR..^^|||||^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....RR..RR....RR....RR..RR..RR......RR..RR..^^^^^||^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....RRRRR.....RR....RR..RR..RRRR....RRRRR..^^^^^^^||||^^^^^^^^<br>
+IIIIIIIIIIIIIII....RR..RR....RR.....RRRR...RR......RR..RR..^^^^^^^^^||||^^^^^<br>
+IIIIIIIIIIIIIII....RR..RR..RRRRRR....RR....RRRRRR..RR..RR..^^^^^^^^^^^|||||^^<br>
+IIIIIIIIIIIIIII...........................................^^^^^^^^^^^^^^^^||^<br>
+IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII<br>
+       </div><div class="map" id="map-past">
+IIIIIIIIIIIIIII..............................................................<br>
+IIIIIIIIIIIIIII....................................................,,,,,,^^^^<br>
+IIIIIIIIIIIIIII....VV..VV...VVVV...VV.......VVVV....VVVV...VV..VV,,,VVVV,,,^^<br>
+IIIIIIIIIIIIIII....VV..VV..VV..VV..VV......VV..VV..VV..VV..VVV.VV,,VV,,VV,,^^<br>
+IIIIIIIIIIIIIII....VV..VV..VV..VV..VV......VV......VVVVVV..VV.VVV,,VV,,VV,,^^<br>
+IIIIIIIIIIIIIII.....VVVV...VV..VV..VV......VV..VV..VV..VV..VV..VV,,VV,,VV,,^^<br>
+IIIIIIIIIIIIIII......VV.....VVVV...VVVVVV...VVVV...VV..VV..VV..VV,,,VVVV,,,^^<br>
+IIIIIIIIIIIIIII....................................................,,,,,,^^^^<br>
+IIIIIIIIIIIIIII....FFFFFF...FFFF...FFFFF...FFFFFF...FFFF...FFFFFF.^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....FF......FF..FF..FF..FF..FF......FF........FF..^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....FFFF....FF..FF..FFFFF...FFFF.....FFFF.....FF..^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....FF......FF..FF..FF..FF..FF..........FF....FF..^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....FF.......FFFF...FF..FF..FFFFFF...FFFF.....FF..^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII...........................................^^^^^^^^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....RRRRR...RRRRRR..RR..RR..RRRRRR..RRRRR..^^|||||^^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....RR..RR....RR....RR..RR..RR......RR..RR..^^^||||^^^^^^^^^^^<br>
+IIIIIIIIIIIIIII....RRRRR.....RR....RR..RR..RRRR....RRRRR..^^^^^|||||||^^^^^^^<br>
+IIIIIIIIIIIIIII....RR..RR....RR.....RRRR...RR......RR..RR..^^^^^^^||||||^^^^^<br>
+IIIIIIIIIIIIIII....RR..RR..RRRRRR....RR....RRRRRR..RR..RR..^^^^^^^^^^|||||||^<br>
+IIIIIIIIIIIIIII...........................................^^^^^^^^^^^^^^||||^<br>
+IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII<br>
+        </div><div class="map" id="map-eruption">
+IIIIIIIIIIIIIII..............................................................<br>
+IIIIIIIIIIIIIII....................................................,,,,,,^^^^<br>
+IIIIIIIIIIIIIII....VV..VV...VVVV...VV.......VVVV....VVVV...VV..VV,,,VVVV,,,^^<br>
+IIIIIIIIIIIIIII....VV..VV..VV..VV..VV......VV..VV..VV..VV..VVV.VV,,VVUUVV,,^^<br>
+IIIIIIIIIIIIIII....VV..VV..VV..VV..VV......VV......VVVVVV..VV.VVV,,VVUUUV,,^^<br>
+IIIIIIIIIIIIIII.....VVVV...VV..VV..VV......VV..VV..VV..VV..VV..VV,,VVUUUU,,^^<br>
+IIIIIIIIIIIIIII......VV.....VVVV...VVVVVV...VVVV...VV..VV..VV..VV,,,VUUUUU,^^<br>
+IIIIIIIIIIIIIII....................................................,,UUUUU,,^<br>
+IIIIIIIIIIIIIII....FFFFFF...FFFF...FFFFF...FFFFFF...FFFF...FFFFFF.^,,UUUUU,,^<br>
+IIIIIIIIIIIIIII....FF......FF..FF..FF..FF..FF......FF........FF..^,,UUUUU,,^^<br>
+IIIIIIIIIIIIIII....FFFF....FF..FF..FFFFF...FFFF.....FFFF.....FF..^^,,UUUUU,,^<br>
+IIIIIIIIIIIIIII....FF......FF..FF..FF..FF..FF..........FF....FF..^,,UUUUU,,^^<br>
+IIIIIIIIIIIIIII....FF.......FFFF...FF..FF..FFFFFF...FFFF.....FF..^^,,UUUUU,,^<br>
+IIIIIIIIIIIIIII...........................................^^^^^^^^,,UUUUU,,^^<br>
+IIIIIIIIIIIIIII....RRRRR...RRRRRR..RR..RR..RRRRRR..RRRRR..^^|||||^^,,UUUUU,,^<br>
+IIIIIIIIIIIIIII....RR..RR....RR....RR..RR..RR......RR..RR..^|||||,,UUUUUU,,^^<br>
+IIIIIIIIIIIIIII....RRRRR.....RR....RR..RR..RRRR....RRRRR..^||||||,UUUUUU,,,^^<br>
+IIIIIIIIIIIIIII....RR..RR....RR.....RRRR...RR......RR..RR..^|||||,,UUUUUU,,^^<br>
+IIIIIIIIIIIIIII....RR..RR..RRRRRR....RR....RRRRRR..RR..RR..^^|||||,,UUUUUUU,,<br>
+IIIIIIIIIIIIIII...........................................^^|||||||^,,,UUUUU,<br>
+IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII<br>
+        </div><div class="map" id="map-future">
+IIIIIIIIIIIIIII..............................................................<br>
+IIIIIIIIIIIIIII....................................................,,,,,,^^^^<br>
+IIIIIIIIIIIIIII....VV..VV...VVVV...VV.......VVVV....VVVV...VV..VV,,,VVVV,,,^^<br>
+IIIIIIIIIIIIIII....VV..VV..VV..VV..VV......VV..VV..VV..VV..VVV.VV,,VV,,VV,,^^<br>
+IIIIIIIIIIIIIII....VV..VV..VV..VV..VV......VV......VVVVVV..VV.VVV,,VVUU,V,,^^<br>
+IIIIIIIIIIIIIII.....VVVV...VV..VV..VV......VV..VV..VV..VV..VV..VV,,VVUU,,,,^^<br>
+IIIIIIIIIIIIIII......VV.....VVVV...VVVVVV...VVVV...VV..VV..VV..VV,,,V,,,,,,^^<br>
+IIIIIIIIIIIIIII....................................................,,^,,,^,,^<br>
+IIIIIIIIIIIIIII....FFFFFF...FFFF...FFFFF...FFFFFF...FFFF...FFFFFF.^,,,,^,,^^^<br>
+IIIIIIIIIIIIIII....FF......FF..FF..FF..FF..FF......FF........FF..^,,^^,,^,,^^<br>
+IIIIIIIIIIIIIII....FFFF....FF..FF..FFFFF...FFFF.....FFFF.....FF..^^,,,,^,,,^^<br>
+IIIIIIIIIIIIIII....FF......FF..FF..FF..FF..FF..........FF....FF..^,,,^,,,,^^^<br>
+IIIIIIIIIIIIIII....FF.......FFFF...FF..FF..FFFFFF...FFFF.....FF..^^,,,,^,,^^^<br>
+IIIIIIIIIIIIIII...........................................^^^^^^^^^^^,,,,^^^^<br>
+IIIIIIIIIIIIIII....RRRRR...RRRRRR..RR..RR..RRRRRR..RRRRR..^||||^^^^,,^,,^,^^^<br>
+IIIIIIIIIIIIIII....RR..RR....RR....RR..RR..RR......RR..RR..^^||||^^^,,,,,^^^^<br>
+IIIIIIIIIIIIIII....RRRRR.....RR....RR..RR..RRRR....RRRRR..^^|||||^^,^,^,,^^^^<br>
+IIIIIIIIIIIIIII....RR..RR....RR.....RRRR...RR......RR..RR..^^^||||^,,,^,^,,^^<br>
+IIIIIIIIIIIIIII....RR..RR..RRRRRR....RR....RRRRRR..RR..RR..^^|||||^,^^,,,^^^^<br>
+IIIIIIIIIIIIIII...........................................^^^||||||^^,,^^,^^^<br>
+IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII<br><br><br>
+        </div>
+        <div><span id="write-text" class="write-text"></span><span id="cursor" class="cursor"></span></div>
+        <div><span id="static-text" class="write-text"></span><span id="cursor" class="cursor"></span></div>
+        <div><span id="static-text2" class="write-text"></span><span id="cursor" class="cursor"></span></div>
+        <div><span id="static-text3" class="write-text"></span><span id="rotatingcursor" class="rotatingcursor"></span></div>
+        </div>
+
+    </div>
+
+    
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modal-text"></p>
+        </div>
+    </div>
+
+
+    <div id="nftModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeNFTModal()">×</span>
+            <div id="nftGraphContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const mapElement = document.getElementById('map');
+        const modal = document.getElementById("myModal");
+        const modalText = document.getElementById("modal-text");
+        const closeModal = document.getElementsByClassName("close")[0];
+        const asciiTitle = document.getElementById('ascii-title');
+        const mapContainer = document.getElementById('mapContainer');
+        let scale = 1; // Výchozí měřítko mapy
+        let lastTap = 0; // Čas posledního tapu
+        let lastDistance = 0; // Poslední vzdálenost pro pinch-to-zoom
+        const zoomFactor = 0.01; // Faktor zvětšení pro pinch-to-zoom
+
+        // Funkce pro zoom
+        function updateZoom(scaleChange) {
+            scale += scaleChange; // Změní měřítko
+            scale = Math.min(Math.max(scale, 1), 5); // Omezí měřítko mezi 1 a 5
+            mapContainer.style.transform = `scale(${scale})`; // Aplikuje transformaci
+        }
+        
+        function changeButtonTextMap() {
+            const button = document.getElementById('swapButton');
+            if (button.innerText === 'Star Map') {
+                button.innerText = 'World Map'; // nový text po prvním kliknutí
+            } else {
+                button.innerText = 'Star Map'; // vrátí zpět původní text po dalším kliknutí
+            }
+        }
+
+        let currentIndex = 0;
+        const texts = ['Past', 'Present', 'Eruption', 'Future'];
+
+        function updateMapLayer(layer) {
+            // Skryjeme všechny divy s mapami kromě "map"
+            document.getElementById('map-present').style.display = 'none';
+            document.getElementById('map-eruption').style.display = 'none';
+            document.getElementById('map-future').style.display = 'none';
+            document.getElementById('map-past').style.display = 'none';
+
+            // Zobrazíme pouze div odpovídající aktuální vrstvě
+            const mapDiv = document.getElementById(`map-${layer.toLowerCase()}`);
+            if (mapDiv) {
+                mapDiv.style.display = 'block';
+
+                hideText(mapDiv);
+
+                fadeInText(mapDiv);
+
+            }
+        }
+
+        function changeButtonText() {
+            const button = document.getElementById('changeButton');
+            const layerText = texts[currentIndex];
+
+            // Nastavení textu tlačítka
+            button.innerHTML = `<span>Current map</span><br><span>${layerText}</span>`;
+
+            // Volání aktualizace vrstvy
+            updateMapLayer(layerText);
+
+            // Aktualizace indexu pro střídání vrstev
+            currentIndex = (currentIndex + 1) % texts.length;
+
+        }
+
+        // Inicializace zobrazení
+        updateMapLayer(texts[currentIndex]);
+
+
+
+
+
+
+        // Funkce pro tlačítko "How?"
+        function how() {
+            const helpText = `
+                <h2>Navigation on the Map:</h2>
+                <p><strong>Movement:</strong> You can scroll the map using the directional arrows on the keyboard, 
+                don’t use those horrible sliders in the edges of the window.</p>
+
+                <p>Use the <strong>+</strong> key to zoom in and, quite unexpectedly, the <strong>-</strong> key to zoom out.
+                You can do the same by clicking the <strong>+++</strong> and <strong>---</strong> buttons in the menu, 
+                but if you're on a desktop, leave their use to those who have to scroll through the ASCII map on a touch screen.</p>
+
+                <h2>Interacting with the Map:</h2>
+                <p>You can get information about locations by simply clicking on any ASCII character on the map. 
+                A window will open with details about that location. To close it, just click somewhere outside the modal.</p>
+
+                <h2>Buttons and What They Do:</h2>
+                <ul>
+                    <li><strong>Star Map:</strong> Will display the MW0rld star map in the future.</li>
+                    <li><strong>Change Map:</strong> Changes the map to view MW0rld in different eras or characters.</li>
+                    <li><strong>X Profile:</strong> Redirects you to MW0rld's profile on X, where we share the latest news and updates.</li>
+                    <li><strong>Go to Game:</strong> Opens the MW0rld text game in Telegram, where you can generate a wallet and immerse yourself in the adventure.</li>
+                    <li><strong>How:</strong> Opens this help, which might seem redundant, but will be here in case of updates.</li>
+                    <li><strong>What:</strong> Currently contains no relevant information; later it might be transformed into a different function.</li>
+                </ul>
+            `;
+
+            // Zavoláme funkci openModal a předáme text jako obsah modálního okna
+            openModal(helpText);
+        }
+
+        // Funkce pro tlačítko "Info"
+        function info() {
+            openModal('<h2>The story of the ASCII map MW0rld: Retro Universe under construction</h2><br>' +
+                'In the mysterious world of MW0rld, which refers to the recent past, but where the laws of reality apply ' +
+                'only as long as the code allows them, a spectacular project is being created that represents the greatness ' +
+                'of this project - a digital map created using ASCII characters, turning each character into a haven of ' +
+                'fantasy, nostalgia and providing important information. It\'s not just a map; it\'s a chronicle of this ' +
+                'world, it will record the most important places firmly linked to this world where the rules of long ' +
+                'forgotten video games reign supreme, and it\'s also a gateway to the world of blockchain, where we intend ' +
+                'to use its full potential to create memorable Quests, crazy items and quirky NPCs.<br><br>' +
+                
+                '<h3>Beyond ones and zeros</h3><br>' +
+                'But what makes the MW0rld project so unique? Each piece will be linked to the Massa blockchain, a revolutionary ' +
+                'technology that brings durability, authenticity and integrity. MW0rld will bring new possibilities and equal ' +
+                'opportunities for every player on the blockchain, our goal is to create a game that will change, evolve and ' +
+                'bring new opportunities for players to prove that they are worthy of having their name recorded, to create ' +
+                'connected NFT personal items for players that reflect their skills and courage.<br><br>' +
+
+                '<h3>The retro rules of the old days</h3><br>' +
+                'MW0rld goes back to the days when games had strict rules, no autosaves, no hints and no lifelines. To the days ' +
+                'when EasterEgg didn\'t mean an NPC character referring to a celebrity. The paths are full of traps that cannot ' +
+                'be bypassed, it will only be possible to prepare using the appropriate item or skill, but what happens if the ' +
+                'first player\'s acquisition of that item causes an unstoppable environmental reaction and the next player is ' +
+                'no longer able to obtain the resources or essences for their quest? Will they make it? Blockchain doesn\'t ' +
+                'forget. The old bit magic is present everywhere, the areas are impenetrable, full of puzzles and dangers, but ' +
+                'what happens between the pixels? What can all be happening between ASCII characters? Or underneath the map ' +
+                'where players can inadvertently get to?<br><br>' +
+
+                '<h3>As the map construction continues</h3><br>' +
+                'The actual creation of the ASCII map is a serious task, it\'s very hard to prepare the ground for MW0rld as ' +
+                'a whole, only now I realize how challenging it is and I have a feeling it will never end. You can carefully ' +
+                'design the game areas and place everything logically and strategically, however every time I ask myself "Will ' +
+                'this be enough?" the answer is "No, it won\'t". I\'ve gone from basic principles like a forest by a meadow and ' +
+                'a river flowing into the ocean, to a situation where I\'m thinking about how the terrain has evolved and taking ' +
+                'notes on the contours of the ASCII map of MW0rld after a few days. Every part of the map drawn needs to be ' +
+                'consistent with what players are already experiencing in MW0rld today. I don\'t want there to be a fixed ' +
+                'beginning and end - each player can choose their own path and explore the world as they choose.<br><br>' +
+
+                '<b>This is the future of MW0rld</b><br>' +
+                'And MW0rld will ideally be an endless challenge and a wonderful memory of the time and moment when it all began...');
+        }
+
+
+
+        // Funkce pro zvětšení mapy
+        function plus() {
+            const mapContainer = document.getElementById('mapContainer');
+            currentScale += 0.5;
+            mapContainer.style.transform = `scale(${currentScale})`;
+        }
+
+        // Funkce pro zmenšení mapy
+        function minus() {
+            const mapContainer = document.getElementById('mapContainer');
+            currentScale -= 0.2;
+            if (currentScale < 0.1) currentScale = 0.1; // nastavit minimální měřítko
+            mapContainer.style.transform = `scale(${currentScale})`;
+        }
+
+
+        // Přidání posluchače události pro zachycení stisku kláves
+        document.addEventListener('keydown', function(event) {
+            // Kontrola, zda uživatel stiskl klávesu "+"
+            if (event.key === '+') {
+                plus();  // Zavolat funkci pro zvětšení mapy
+            }
+            // Kontrola, zda uživatel stiskl klávesu "-"
+            else if (event.key === '-') {
+                minus(); // Zavolat funkci pro zmenšení mapy
+            }
+        });
+
+
+
+
+
+        let titles = [ "MW0rld - Explore", "MW0rld - Discover", "MW0rld - Adventure", "MW0rld - Journey Begins", "MW0rld - Enter the Unknown", "MW0rld - Forge Your Path", "MW0rld - Ancient Mysteries", "MW0rld - Brave the Elements", "MW0rld - Seek the Truth", "MW0rld - Quest Awaits", "MW0rld - Beyond the Horizon", "MW0rld - Realms of Magic", "MW0rld - Claim Your Destiny", "MW0rld - Lost Legends", "MW0rld - Realm of Valor", "MW0rld - Secrets Unfold", "MW0rld - Heroes Rise", "MW0rld - Eternal Quests", "MW0rld - Myths and Treasures", "MW0rld - Mystical Lands", "MW0rld - The Great Expedition", "MW0rld - Beyond Reality", "MW0rld - Embrace the Challenge", "MW0rld - Ascend to Glory", "MW0rld - The Final Frontier", "MW0rld - Uncharted Territory", "MW0rld - Fate Awaits", "MW0rld - Journey of Heroes", "MW0rld - Enchanted Forests", "MW0rld - Seek and Discover", "MW0rld - Test Your Courage", "MW0rld - Awaken the Magic", "MW0rld - Unveil the Mystery", "MW0rld - Venture Forth", "MW0rld - The Call to Adventure", "MW0rld - Unlock the Secrets", "MW0rld - Bravery and Glory", "MW0rld - Guardians of Lore" ];
+        let index = 0;
+        setInterval(() => {
+            document.title = titles[index];
+            index = (index + 1) % titles.length;
+        }, 5000); // změna každou sekundu
+
+
+
+
+
+
+
+
+
+
+        let currentScale; // Výchozí hodnota není přiřazena
+
+        // Funkce pro nastavení měřítka podle zařízení
+        function setInitialScale() {
+            const mapContainer = document.getElementById('mapContainer');
+            if (window.innerWidth <= 768) {
+                // Výchozí hodnota pro mobilní zařízení
+                currentScale = 2.5; // Například menší měřítko na mobilních zařízeních
+            } else {
+                // Výchozí hodnota pro stolní zařízení
+                currentScale = 1.5;
+            }
+            mapContainer.style.transform = `scale(${currentScale})`;
+        }
+        // Aplikování výchozího měřítka při načtení stránky
+        window.addEventListener('load', setInitialScale);
+
+
+
+
+        function openXProfile() {
+            window.open('https://x.com/MW0rld_bot', '_blank'); // Otevře v novém okně nebo záložce
+        }
+
+        function openTeleGame() {
+            window.open('https://t.me/MW0rld_bot', '_blank'); // Otevře v novém okně nebo záložce
+        }
+
+       // Otevření modálního okna
+        function openModal(infoText) {
+            modalText.innerHTML = infoText;
+            modal.classList.remove('closing'); // Ujistíme se, že třída "closing" je odstraněna
+            modal.classList.add('active'); // Přidáme třídu, která modal zobrazí
+
+        }
+
+        
+        // Funkce pro rozpoznání dvojitého poklepání na dotykové obrazovce
+        function handleTouch(event) {
+            const currentTime = new Date().getTime();
+            const tapInterval = currentTime - lastTap;
+
+            if (tapInterval < 300 && tapInterval > 0) { // Pokud je druhý tap v intervalu 300ms
+                handleClick(event); // Zobrazí modalní okno
+            }
+
+            lastTap = currentTime; // Uložení času posledního doteku
+        }
+
+
+        
+        function openNFTModal() {
+            document.getElementById('nftModal').classList.add('active');
+            // Load the NFT simulation graph into the modal
+            document.getElementById('nftGraphContainer').innerHTML = `<iframe src="nft_items.html" width="100%" height="500px" frameborder="0"></iframe>`;
+        }
+
+        
+
+
+
+
+
+        let timeoutId;
+        let headerContainer = document.querySelector('.header-container');
+
+        // Funkce pro přepínání sbalení a rozbalení
+        function toggleHeader() {
+            if (headerContainer.classList.contains('collapsed')) {
+                headerContainer.classList.remove('collapsed');  // Rozbalení
+            } else {
+                headerContainer.classList.add('collapsed');  // Sbalení
+            }
+        }
+
+        // Funkce pro detekci neaktivity
+        function resetActivityTimer() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                headerContainer.classList.add('collapsed');  // Sbalení po 5s
+            }, 5000);  // 5000 ms = 5s
+        }
+
+        // Přidání událostí pro detekci neaktivity
+        document.addEventListener('mousemove', resetActivityTimer);
+        document.addEventListener('keydown', resetActivityTimer);
+        document.addEventListener('click', resetActivityTimer);
+
+        // Inicializace, aby byl po načtení obsah aktivní
+        resetActivityTimer();
+
+
+
+
+
+
+
+       
+        // Seznam textů, které se budou psát
+        const writetexts = [
+            "Rune", "Fish", "Colors", "Massa", "Immunity", "Element", "Earth", "Star", "Blockchain", "MW0rld", "Magic", "Hamburger", 
+            "Player", "Create", "Wind", "Mansion", "Inferno", "Sword", "Quests", "Adventure", "Dusa", "Dragon", "Shards", "Snake",
+            "Expanse", "Volcano", "NFTs", "Jellyfish", "Future", "ASCII", "Legends", "Origami", "Fantasy", "Treasure", "RetroRules", "Scarcity",
+            "DeWeb", "Artifact", "Rarity", "Banana", "Mines", "Trade", "Aether", "Innovate", "Revolution", "Tent", "Explore",
+            "Crypt", "Imagine", "Token", "World", "Talisman", "Essence", "Hero", "Fire", "Ethereal", "Trial", "Lunar",
+            "Coin", "Island", "Decentralized", "Market", "Guild", "Loot"
+        ];
+
+
+        let textIndex = 0; // Indikátor aktuálního textu v seznamu
+        let charIndex = 0; // Indikátor aktuálního znaku
+        const typingSpeed = 150; // Rychlost psaní
+        const deletingSpeed = 75; // Rychlost mazání
+
+        // Funkce pro psaní textu
+        function typeText() {
+            const writeTextElement = document.getElementById("write-text");
+            
+            if (charIndex < writetexts[textIndex].length) {
+                writeTextElement.textContent += writetexts[textIndex].charAt(charIndex);
+                charIndex++;
+                setTimeout(typeText, typingSpeed); // Pokračuj v psaní
+            } else {
+                // Po napsání celého textu počkáme a pak začneme mazat
+                setTimeout(deleteText, 1000); // Počkáme 1 sekundu před mazáním
+            }
+        }
+
+        // Funkce pro mazání textu
+        function deleteText() {
+            const writeTextElement = document.getElementById("write-text");
+
+            if (charIndex > 0) {
+                writeTextElement.textContent = writetexts[textIndex].substring(0, charIndex - 1);
+                charIndex--;
+                setTimeout(deleteText, deletingSpeed); // Pokračuj v mazání
+            } else {
+                // Když je text smazán, přejdeme na další text
+                textIndex = (textIndex + 1) % writetexts.length; // Pokračujeme v seznamu textů (cyklicky)
+                setTimeout(typeText, 500); // Počkáme chvíli a začneme psát další text
+            }
+        }
+
+        // Funkce pro napsání statického textu, který zůstane trvale viditelný
+        const writeTextElementStatic = document.getElementById("static-text");
+        const staticText = "Explore the Unknown";  // Statický text, který chceme napsat
+        let staticCharIndex = 0;      // Indikátor aktuálního znaku pro statický text
+        const typingSpeedStatic = 500; // Rychlost psaní pro statický text
+
+        // Funkce pro psaní statického textu
+        function typeStaticText() {
+            const writeTextElementStatic = document.getElementById("static-text");
+            if (staticCharIndex < staticText.length) {
+                writeTextElementStatic.textContent += staticText.charAt(staticCharIndex);
+                staticCharIndex++;
+                setTimeout(typeStaticText, typingSpeedStatic); // Pokračuj v psaní
+            } else {
+                // Po napsání celého statického textu nastavíme opacity na 1 pro zviditelnění
+                writeTextElementStatic.style.opacity = 1;
+            }
+        }
+
+
+
+
+        // Funkce pro napsání statického textu, který zůstane trvale viditelný
+        const writeTextElementStatic2 = document.getElementById("static-text2");
+        const staticText2 = "2025 - @MW0rld_bot";  // Statický text, který chceme napsat
+        let staticCharIndex2 = 0;      // Indikátor aktuálního znaku pro statický text
+        const typingSpeedStatic2 = 800; // Rychlost psaní pro statický text
+
+        // Funkce pro psaní statického textu
+        function typeStaticText2() {
+            const writeTextElementStatic2 = document.getElementById("static-text2");
+            if (staticCharIndex2 < staticText2.length) {
+                writeTextElementStatic2.textContent += staticText2.charAt(staticCharIndex2);
+                staticCharIndex2++;
+                setTimeout(typeStaticText2, typingSpeedStatic2); // Pokračuj v psaní
+            } else {
+                // Po napsání celého statického textu nastavíme opacity na 1 pro zviditelnění
+                writeTextElementStatic2.style.opacity = 1;
+            }
+        }
+
+
+
+        // Funkce pro napsání statického textu, který zůstane trvale viditelný
+        const writeTextElementStatic3 = document.getElementById("static-text3");
+        const staticText3 = "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||4||||||6|||2|";  // Statický text, který chceme napsat
+        let staticCharIndex3 = 0;      // Indikátor aktuálního znaku pro statický text
+        const typingSpeedStatic3 = 100000; // Rychlost psaní pro statický text
+
+        // Funkce pro psaní statického textu
+        function typeStaticText3() {
+            const writeTextElementStatic3 = document.getElementById("static-text3");
+            if (staticCharIndex3 < staticText3.length) {
+                writeTextElementStatic3.textContent += staticText3.charAt(staticCharIndex3);
+                staticCharIndex3++;
+                setTimeout(typeStaticText3, typingSpeedStatic3); // Pokračuj v psaní
+            } else {
+                // Po napsání celého statického textu nastavíme opacity na 1 pro zviditelnění
+                writeTextElementStatic3.style.opacity = 1;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        // Možné hodnoty pro rotující kurzor
+        const cursorSymbols = ['|', '/', '-', '\\'];  // Znaky pro rotaci
+        let cursorIndex = 0; // Počáteční index pro kurzor
+
+        // Funkce pro rotaci kurzoru
+        function rotateCursor() {
+            const cursorElement = document.getElementById("rotatingcursor");
+            cursorElement.textContent = cursorSymbols[cursorIndex];  // Změní znak kurzoru
+            cursorIndex = (cursorIndex + 1) % cursorSymbols.length;  // Rotace mezi znaky
+        }
+
+
+
+        // Funkce pro spuštění všech textových animací při načtení stránky
+        window.onload = function() {
+            // Spustíme psaní dynamického textu
+            typeText();
+            setInterval(rotateCursor, 200);  // Rotace kurzoru každých 300 ms
+            // Spustíme psaní statického textu (který zůstane trvale viditelný)
+            typeStaticText();
+            typeStaticText2();
+            typeStaticText3();
+            if (window.location.hash === '#nftitems') {
+                openNFTModal();
+            }
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // Zavření modálního okna
+        closeModal.onclick = function() {
+            modal.classList.add('closing'); // Přidáme třídu pro efekt zavírání
+            setTimeout(() => {
+                modal.classList.remove('active', 'closing'); // Po 1.3s odstraníme třídy
+            }, 1300); // 1300 ms odpovídá délce přechodu opacity
+        };
+        
+
+
+
+        function closeNFTModal() {
+            document.getElementById('nftModal').classList.add('closing');
+            setTimeout(() => {
+                document.getElementById('nftModal').classList.remove('active', 'closing');
+                document.getElementById('nftGraphContainer').innerHTML = '';
+            }, 1300);
+        }
+
+
+
+
+
+
+
+
+
+        // Zavření modálního okna při kliknutí mimo modal-content
+        window.onclick = function(event) {
+            if (event.target === modal || event.target === document.getElementById('nftModal')) {
+                event.target.classList.add('closing'); // Přidáme třídu pro efekt zavírání
+                setTimeout(() => {
+                    event.target.classList.remove('active', 'closing'); // Po 1.3s odstraníme třídy
+                    if (event.target.id === 'nftModal') {
+                        document.getElementById('nftGraphContainer').innerHTML = '';
+                    }
+                }, 1300); // 1300 ms odpovídá délce přechodu opacity
+            }
+        };
+
+
+        
+        
+        // Funkce pro rozpoznání kliknutí na terén
+        function handleClick(event) {
+            const target = event.target;
+
+            if (target.tagName === 'SPAN') {
+                let infoText = '<h2>? (Unknown character)</h2><br> This character is unknown and has not yet been identified. It could be a sign from another world or a lost code fragment.';
+
+            // Nastavíme text podle symbolu
+            switch (target.innerText) {
+                case '.':
+                    infoText = '<h2>Background</h2><br> This space seems empty at first glance, but appearances are deceiving. In the shadows, you can hear the whispers of ancient adventurers walking about. Each step leads you deeper into the unknown, is there something here? Portals? Doors? Nothing? Forgotten coins? Burnt matches? The darkness here is infinite ... imagine a blank canvas that could bear the outlines of the past as if photographed on a glass negative.';
+                    break;
+                case '%':
+                    infoText = '<h2>Construction</h2><br> The map is far from being ready, the folding and plans are too extensive, everything is outgrowing the author. ' +
+                        'What started with a 50x50 pixel map and a few snakes in the grass is growing by the day. Sometimes on paper as a note, sometimes as a function in python, ' +
+                        'next time as a javascript function for a DeWeb ASCII map, this weekend as an idea by the backyard fire, MW0rld is growing and no one has seen the end of it yet. ' +
+                        'Here lie the basics of the mechanics and visuals being tested, and they are the cornerstone of developing a reference ASCII map for MW0rld. The size of the final ' +
+                        'map has not been determined, but given the performance of the site and the high rendering load and hundreds of thousands of characters wrapped in span tags, ' +
+                        'I am hitting some limits due to the determination to contain the entire map in a single HTML file and using only built-in functions and a basic set of ASCII characters. <br><br>' +
+                        'Each character carries information, it is the first introduction of a certain character of the work. Many players are already discovering as they play how words can be two-faced '+
+                        'and tricky, but also beautiful and tinged with the temperament of the author. The textual environment is not only a challenge for the player, it is a challenge for the author as well. <br><br>' +
+                        'Forgotten, lost, secret mechanisms and details are one of the pillars of MW0rld. Players won\'t be presented with every feature on a cutlery plate, every option in a clear manual, ' +
+                        'and NPCs won\'t be pointing at a door with a key in the lock, yes those are our RetroRules. It\'s simply the direction MW0rld has been heading in since the beginning and now it will only move forward on that path.';
+                    break;
+                case 'V':
+                    infoText = '<h2>Volcano</h2><br> A volcano is a living menace that breathes heat and the smell of scorched earth. Every step around the volcano smells of sulphur and the ground beneath your feet is hot. ' +
+                       'This is a place created by the ceaseless activity beneath the surface that lends life to everything on the surface. Adventurers looking for a challenge often go too far in their quest. <br><br>' +
+                       'The volcano\'s surroundings are full of hidden caves and caverns that hide minerals, at best gems, at worst traces of living colours. There\'s no one who has the right information that hasn\'t been distorted by time. <br><br>' +
+                       'Vulcan has its rules, but it\'s foolish to make rational calculations here.';
+                    break;
+                case 'F':
+                    infoText = '<h2>Forest</h2><br> The forest is a place of peace and danger. The trees are tall and light rarely penetrates. The shade of the trees hides an entire ecosystem. <br><br>' +
+                        'The amount of needles on the trees, for example, affects the water level in the nearby swamp, and that\'s just the tip of the iceberg. <br><br>' +
+                        'Every sound in the forest has a purpose, not everyone will find what they are looking for, there are no paths. But it also means you can\'t take a wrong turn. Discovering a hidden place can bring good and evil. <br><br>' +
+                        'Inside the forest there are places with rock masses that reach unimaginable depths below the surface between the trees. Ancient markings and forgotten writing can only be seen on some of the stones. ' +
+                        'The stories bear literally no positive words about these places or the deeds performed here, and even during the windless season the treetops can be seen moving away from these places.';
+                    break;
+                case '^':
+                    infoText = '<h2>Forest</h2><br> The forest is a place of peace and danger. The trees are tall and light rarely penetrates. The shade of the trees hides an entire ecosystem. <br><br>' +
+                            'The amount of needles on the trees, for example, affects the water level in the nearby swamp, and that\'s just the tip of the iceberg. <br><br>' +
+                            'Every sound in the forest has a purpose, not everyone will find what they are looking for, there are no paths. But it also means you can\'t take a wrong turn. Discovering a hidden place can bring good and evil. <br><br>' +
+                            'Inside the forest there are places with rock masses that reach unimaginable depths below the surface between the trees. Ancient markings and forgotten writing can only be seen on some of the stones. ' +
+                            'The stories bear literally no positive words about these places or the deeds performed here, and even during the windless season the treetops can be seen moving away from these places.';
+                    break;
+                case 'R':
+                    infoText = '<h2>River</h2><br> The river is the lifeblood of this world. You can refresh yourself or look for aquatic animals. If someone says that the secrets from the forests bring streams to the lakes, ' +
+                        'I\'m sure they won\'t be far from the truth, but is it really safe to explore these lakes? <br><br>' +
+                        'The rivers are clean, wild. The waters flow fast on the rocky parts and create many rapids. For the adventure seeker, it\'s a beautiful sight that can reveal paths leading deep into the mountains. <br><br>' +
+                        'The banks of the stream are the best places to rest, they are quiet places where vital items can be easily procured. It\'s a perfect place to plan your next trip or prepare, if you\'re smart you won\'t take it lightly.';
+                    break;
+                case '|':
+                    infoText = '<h2>River</h2><br> The river is the lifeblood of this world. You can refresh yourself or look for aquatic animals. If someone says that the secrets from the forests bring streams to the lakes, ' +
+                            'I\'m sure they won\'t be far from the truth, but is it really safe to explore these lakes? <br><br>' +
+                            'The rivers are clean, wild. The waters flow fast on the rocky parts and create many rapids. For the adventure seeker, it\'s a beautiful sight that can reveal paths leading deep into the mountains. <br><br>' +
+                            'The banks of the stream are the best places to rest, they are quiet places where vital items can be easily procured. It\'s a perfect place to plan your next trip or prepare, if you\'re smart you won\'t take it lightly.';
+                    break;
+                case ',':
+                    infoText = '<h2>Stone</h2><br> This terrain is covered with a layer of solidified lava and volcanic ash, a legacy of ancient eruptions. Everything around is hard and now dead, ' +
+                        'if you touch your palm to the stone masses you can feel that there is still a struggle going on beneath the surface and everything is trembling slightly under the onslaught of the forces of ' +
+                        'the still living magma that claims its own place among the intelligent creatures here. In this place the landscape is transformed into completely different states and distortions in clearly ' +
+                        'regular patterns that are very similar to fractal formations, on a planet where gravitational forces are at work and physics works on the same principles only something with its own sense of ' +
+                        'perfection could create something like this. Life is held only on the fringes of these places. Finding any form of vegetation or organisms is a miracle, and yet, even here, one can catch a glimpse of something. <br><br>' +
+                        'The surface in this area is no ordinary rock. The surface, which is full of fractal cracks and patterns microscopically precise down to the smallest measurable dimensions, is composed of many elements ' +
+                        'and molecules of atoms as yet unknown to us. Layers of ash hide the subtle glow on nights when the two moons float together in the sky and the rock surface emits colours, some of which are outside the visible spectrum. ' +
+                        'It also makes movement difficult, exploration difficult, and in the wind, breathing is a death sentence for the unprepared.';
+                    break;
+                case 'U':
+                    infoText = '<h2>Lava</h2><br> A glowing lava, pulsating and destructive, merciless to all that oppose it. The temperature rises, the earth trembles as the lava comes to the surface, and everything around is in constant motion. ' +
+                        'It leaves the landscape dead and devoid of organic life. <br><br>' +
+                        'The lava flows create a new landscape that changes with each eruption. The new landscape covers the old. <br><br>' +
+                        'Don\'t be fooled by your belief that lava is lifeless. Only if you are able to get close enough before the lava ends its short but dramatic life cycle can you see its desire to rid the world of organic life and replace ' + 
+                        'it with an existence that was here millions of years before anything organic.';
+                    break;
+                case 'I':
+                    infoText = '<h2>Edge</h2><br> The edges are the border between the known and the unknown - the zone where the known world merges with the unexplored landscape. This space, only partially delimited, '+ 
+                        'could resemble an entrance into another dimension where nothing is fixed. A step in this direction represents a great uncertainty. Spaces in which there are only two spatial and three temporal dimensions ' +
+                        'are dangerous by their very nature. Is it possible to imagine such worlds in our conception? And if not, how could adventurers survive or move in them? <br><br>' +
+                        'Let us try to imagine a door in a world of two spatial dimensions. In this case, it is a line segment lying on a plane - the surface of this world. Without a third dimension of height, ' + 
+                        'the door cannot be lifted. So we can only move it on the surface. However, by this displacement we disturb the stability of the space above the surface, where time is located in the form of three dimensions, ' +
+                        'each of which has a specific effect on the material world => <br><br>' +
+                        'The first time dimension affects the passage of time and causes the door material to age rapidly.<br><br>' +
+                        'The second time dimension has a warping effect only on inorganic substances, which can cause rocks to move or water molecules to change their structure.<br><br>' +
+                        'The third time dimension introduces retrocausality - so if we open the door, future events will force us to close the door again, preventing the temporal anomaly that opening it would cause.<br><br>' +
+                        'The question then becomes: why would anyone want to open such a door in the first place?"';
+                    break;
+                default:
+                    infoText = '<h2>? (Unknown character)</h2><br> This character is unknown and has not yet been identified. It could be a sign from another world or a lost code fragment.'; // pro případ, že je znak neznámý
+                    break;
+            }
+
+                // Otevřeme modalní okno s informací
+                openModal(infoText);
+            }
+        }
+
+
+
+
+
+        function prepareMap(mapElement) {
+            const lines = mapElement.innerHTML.split('<br>');
+            let newContent = '';
+
+            lines.forEach(line => {
+                let processedLine = '';
+                let isInsideSpan = false;
+
+                // Procházíme každý znak v řádku
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+
+                    // Pokud jsme narazili na `<` znamená to začátek HTML tagu
+                    if (char === '<') {
+                        isInsideSpan = true;
+                    }
+
+                    // Přidej znak do `processedLine` pokud nejsme uvnitř tagu
+                    if (!isInsideSpan) {
+                        let className = '';
+
+                        switch (char) {
+                            case '.': className = 'background'; break;
+                            case '%': className = 'construction'; break;
+                            case 'V': className = 'volcano'; break;
+                            case 'F': className = 'forest'; break;
+                            case '^': className = 'forest2'; break;
+                            case 'R': className = 'river'; break;
+                            case '|': className = 'river2'; break;
+                            case ',': className = 'stone'; break;
+                            case 'U': className = 'lava'; break;
+                            case 'I': className = 'border'; break;
+                            default: className = ''; // Pokud není třída, necháme prázdné
+                        }
+
+                        // Zabalíme znak do `span`, pokud má přiřazenou třídu
+                        processedLine += className ? `<span class="${className} typing-text">${char}</span>` : char;
+                     
+                    } else {
+                        // Pokud jsme uvnitř tagu, přímo přidáváme tag bez obalování
+                        processedLine += char;
+                    }
+
+                    // Konec HTML tagu
+                    if (char === '>') {
+                        isInsideSpan = false;
+                    }
+                }
+
+                newContent += processedLine + '<br>';
+            });
+
+            // Změníme obsah mapy
+            mapElement.innerHTML = newContent;
+
+            // Po vykreslení obsahu provedeme zviditelnění znaků
+            fadeInText(mapElement);
+        }
+
+
+        // Po vykreslení textu na stránku (v mapě) se spustí funkce pro zviditelnění znaků
+        function fadeInText(element, delay = 4) {
+            const spans = element.querySelectorAll('.typing-text');
+
+            spans.forEach((span, index) => {
+                setTimeout(() => {
+                    span.style.opacity = 1;  // Zviditelní span po zpoždění
+
+                }, delay * index);
+            });
+        }
+
+
+
+
+
+        function hideText(element) {
+            const spans = element.querySelectorAll('.typing-text');
+            spans.forEach(span => {
+                span.style.opacity = 0;  // Nastaví opacity na 0, takže bude neviditelný
+            });
+        }
+
+
+
+
+
+
+
+        // Příprava mapy
+        prepareMap(mapElement); // Pro první mapu
+
+
+        // Naslouchání na kliknutí a doteky
+        // Pouze jedno kliknutí na desktopu (PC) pro zobrazení modalu
+        mapElement.addEventListener('click', function(event) {
+            if (event.target.tagName === 'SPAN') { // Ověříme, zda bylo kliknuto na <span>
+                handleClick(event); // Zobrazí modalní okno
+            }
+        });
+
+
+    </script>
+</body>
+</html>
