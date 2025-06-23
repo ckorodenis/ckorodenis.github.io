@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Vytvoření obrázku loga
     const logo = document.createElement('img');
-    logo.src = '/icon_mw0rld.png'; // Cesta k logu
+    logo.src = '/fisherman/icon_mw0rld.png'; // Cesta k logu
     logo.alt = 'MW0rld Icon';
 
     // Přidání loga do vrstvy
