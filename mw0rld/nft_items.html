@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFT Minting Simulation</title>
+    <title>MW0rld NFT Items Minting Progress</title>
     <style>
         body {
             font-family: monospace;
-            background-color: transparent; /* Transparentní pozadí */
+            background-color: transparent;
             color: #2d87aa;
             text-align: center;
         }
@@ -43,12 +43,11 @@
             padding-bottom: 10px;
             position: relative;
         }
-        /* Každý sloupec má jinou barvu */
-        #bar1 { background-color: #8B0000; } /* Tmavě červená */
-        #bar2 { background-color: #004488; } /* Tmavě modrá */
-        #bar3 { background-color: #006600; } /* Tmavě zelená */
-        #bar4 { background-color: #886600; } /* Tmavě žlutá */
-        #bar5 { background-color: #660088; } /* Tmavě fialová */
+        #bar1 { background-color: #8B0000; }
+        #bar2 { background-color: #004488; }
+        #bar3 { background-color: #006600; }
+        #bar4 { background-color: #886600; }
+        #bar5 { background-color: #660088; }
 
         .count {
             position: absolute;
@@ -60,7 +59,7 @@
         .emoji {
             font-size: 30px;
             margin-top: 5px;
-            color: #2d87aa;        
+            color: #2d87aa;
         }
         .most-common::before {
             content: "Common";
@@ -71,7 +70,6 @@
             transform: translateX(-50%);
             font-size: 14px;
         }
-
         .most-rare::before {
             content: "Rare";
             color: red;
@@ -81,7 +79,6 @@
             transform: translateX(-50%);
             font-size: 14px;
         }
-        
         button {
             padding: 8px 16px;
             font-size: 14px;
@@ -101,7 +98,7 @@
 </head>
 <body>
     <h1>NFT Items</h1>
-    <p>Simulation of minting NFT items in MW0rld<br><br>Minting in progress... <br>Total NFT Items: <span id="totalCount">0</span> / 5000</p>
+    <p>Minting of NFT items in MW0rld<br><br>Minting in progress... <br>Total NFT Items: <span id="totalCount">0</span> / <span id="maxCount">0</span></p>
     <div id="chart-container">
         <div class="bar-container">
             <div class="bar" id="bar1" style="height: 10px;"><span class="count">0</span></div>
@@ -127,9 +124,17 @@
     <button id="resetButton">Reset Simulation</button>
 
     <script>
-        let nftCounts = [0, 0, 0, 0, 0]; // Počet NFT každého druhu
+        // Ručně definované cílové počty pro každý item s poznámkami
+        const targetCounts = [
+            5,  // Item 1: 🪢 (bar1, tmavě červená)
+            5,  // Item 2: 🔦 (bar2, tmavě modrá)
+            2,  // Item 3: ⛺ (bar3, tmavě zelená)
+            3,  // Item 4: 🧪 (bar4, tmavě žlutá)
+            3   // Item 5: 🔬 (bar5, tmavě fialová)
+        ];
+        let currentCounts = [0, 0, 0, 0, 0]; // Aktuální počet NFT každého druhu
         let totalNFTs = 0;
-        const maxNFTs = 5000;
+        const maxNFTs = targetCounts.reduce((a, b) => a + b, 0); // Celkový počet NFT
         const bars = [
             document.getElementById("bar1"),
             document.getElementById("bar2"),
@@ -138,73 +143,72 @@
             document.getElementById("bar5")
         ];
         const totalCountDisplay = document.getElementById("totalCount");
+        const maxCountDisplay = document.getElementById("maxCount");
         const resetButton = document.getElementById("resetButton");
 
-        // Získání prvků pro textové vysvětlení
-        const rarityExplanation = document.createElement('p');
-        rarityExplanation.style.color = 'white';
-        document.body.appendChild(rarityExplanation);
+        // Zobrazení maximálního počtu
+        maxCountDisplay.innerText = maxNFTs;
+
+        // Nastavení rychlosti: dosažení maxima za 5 sekund (5000 ms)
+        const totalSteps = 25; // Počet kroků pro plynulou animaci
+        const stepInterval = 5000 / totalSteps; // Interval mezi kroky (ms)
 
         function mintNFT() {
-            if (totalNFTs >= maxNFTs) {
-                updateChart(); // Poslední aktualizace grafu
-                return;
-            }
-            
-            let randomIndex = Math.floor(Math.random() * 5); // Vyber náhodný NFT druh
-            let randomAmount = Math.floor(Math.random() * 250) + 50; // Mint 50-300 ks
-            nftCounts[randomIndex] += randomAmount;
-            totalNFTs += randomAmount;
-
-            if (totalNFTs > maxNFTs) {
-                totalNFTs = maxNFTs;
+            let allReached = true;
+            for (let i = 0; i < targetCounts.length; i++) {
+                if (currentCounts[i] < targetCounts[i]) {
+                    allReached = false;
+                    // Přírůstek: max 1 za krok, nepřekročit cílovou hodnotu
+                    let increment = Math.min(
+                        Math.random() < 0.5 ? 1 : 0, // 50% šance na přírůstek 1
+                        targetCounts[i] - currentCounts[i]
+                    );
+                    currentCounts[i] += increment;
+                    totalNFTs += increment;
+                }
             }
 
             updateChart();
             totalCountDisplay.innerText = totalNFTs;
 
-            if (totalNFTs < maxNFTs) {
-                setTimeout(mintNFT, 200);
+            if (!allReached) {
+                setTimeout(mintNFT, stepInterval);
             }
         }
 
         function updateChart() {
-            let sortedNFTs = [...nftCounts].map((count, index) => ({ count, index }));
+            const maxCount = Math.max(...targetCounts); // Nejvyšší cílová hodnota
+            let sortedNFTs = [...currentCounts].map((count, index) => ({ count, index }));
             sortedNFTs.sort((a, b) => b.count - a.count);
 
             sortedNFTs.forEach((item, i) => {
                 let bar = bars[item.index];
-                bar.style.height = (item.count / maxNFTs * 100 * 4) + "px"; // Výška dle počtu NFT
+                // Škálování výšky podle nejvyšší cílové hodnoty
+                bar.style.height = (item.count / maxCount * 120) + "px";
                 bar.querySelector(".count").innerText = item.count;
-                
-                // Odstranění starých tříd
                 bar.classList.remove('most-common', 'most-rare');
             });
 
             // Označení největšího a nejmenšího počtu
-            let mostCommon = sortedNFTs[0]; // První prvek je největší
-            let mostRare = sortedNFTs[sortedNFTs.length - 1]; // Poslední prvek je nejmenší
-
-            bars[mostCommon.index].classList.add('most-common');
-            bars[mostRare.index].classList.add('most-rare');
+            let mostCommon = sortedNFTs[0];
+            let mostRare = sortedNFTs[sortedNFTs.length - 1];
+            if (mostCommon.count > 0) bars[mostCommon.index].classList.add('most-common');
+            if (mostRare.count > 0) bars[mostRare.index].classList.add('most-rare');
         }
 
-        // Funkce pro resetování simulace
         function resetSimulation() {
-            nftCounts = [0, 0, 0, 0, 0]; // Reset počtu NFT každého druhu
-            totalNFTs = 0; // Reset celkového počtu NFT
-            totalCountDisplay.innerText = totalNFTs; // Aktualizace zobrazeného počtu NFT
+            currentCounts = [0, 0, 0, 0, 0];
+            totalNFTs = 0;
+            totalCountDisplay.innerText = totalNFTs;
             bars.forEach(bar => {
-                bar.style.height = "10px"; // Reset výšky sloupců
-                bar.querySelector(".count").innerText = "0"; // Reset textu počtu
+                bar.style.height = "10px";
+                bar.querySelector(".count").innerText = "0";
+                bar.classList.remove('most-common', 'most-rare');
             });
-            mintNFT(); // Restart simulace
+            mintNFT();
         }
 
-        // Otevření simulace
         mintNFT();
-
-        // Event listener pro reset tlačítko
         resetButton.addEventListener("click", resetSimulation);
     </script>
 </body>
