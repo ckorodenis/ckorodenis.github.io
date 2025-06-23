@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MW0rld - Retro Universe</title>
+    <link rel="stylesheet" href="./icon_mw0rld.css">
     <style>
         body {
             font-family: 'Consolas', monospace;
@@ -468,7 +469,9 @@
         </div>
     </div>
 
+    <script src="./icon_mw0rld.js"></script>
     <script>
+        
         // ASCII umění
         const asciiArt = [
             " __       __  __       __   ______             __        __ ",
@@ -586,11 +589,13 @@
         const logoText = document.getElementById('logo-text');
         const subtext = document.getElementById('subtext');
     
-        typeText(logoText, asciiArt, 15, () => {
-            showMenuItems(() => {
-                typeAndEraseText(subtext, retroTexts, 150, 100, 2000); // Psaní: 150ms, mazání: 100ms, pauza: 2000ms
+        setTimeout(() => {
+            typeText(logoText, asciiArt, 10, () => {
+                showMenuItems(() => {
+                    typeAndEraseText(subtext, retroTexts, 150, 100, 2000);
+                });
             });
-        });
+        }, 4000);
     
        // Funkce pro aktualizaci .progress-line a animací
         function updateProgressLine() {
