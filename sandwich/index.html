@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeWeb Sandwich - Best in MW0rld</title>
+    <link rel="icon" type="image/png" href="./media/favi_mw0rld.png">
+    <link rel="stylesheet" href="./icon_mw0rld.css">
     <style>
         body {
             font-family: 'Consolas', monospace;
@@ -703,7 +705,7 @@
             }
         }
     </style>
-  <script type="module" crossorigin src="./assets/index-DOFE9vC-.js"></script>
+  <script type="module" crossorigin src="/assets/index-DOFE9vC-.js"></script>
 </head>
 
 <body>
@@ -788,7 +790,7 @@
         </div>
     </div>
 
-
+    <script src="./icon_mw0rld.js"></script>
     <script>
         const asciiArt = [
             " __       __  __       __   ______             __        __ ",
@@ -929,9 +931,11 @@
         window.addEventListener('load', () => {
             const logoText = document.getElementById('logo-text');
             const sandwichLogoElement = document.getElementById('sandwich-logo');
-            typeText(logoText, asciiArt, 5);
-            typeText(sandwichLogoElement, sandwichLogo, 5);
-            updateLoadingBar();
+            setTimeout(() => {
+                typeText(logoText, asciiArt, 5);
+                typeText(sandwichLogoElement, sandwichLogo, 5);
+                updateLoadingBar();
+            }, 4000);
         });
 
         
