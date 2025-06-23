@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fisherman John - Best fish in MW0rld</title>
+    <link rel="icon" type="image/png" href="./media/favi_mw0rld.png">
+    <style>
+        body {
+            font-family: 'Consolas', monospace;
+            background-color: #000000;
+            color: #2d87aa;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
+            cursor: cell;
+        }
+
+        .container {
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            overflow: hidden;
+            cursor: cell;
+        }
+
+        #section-1 {
+            background-color: #010053;
+            color: #ceff5b;
+            text-align: center;
+            border: none;
+            box-shadow: 0 0 15px #00e1ff, 0 0 25px #00ffff;
+            animation: glitchBorder 3s infinite steps(5) alternate;
+            width: calc(100% - 10px);
+            min-height: calc(100vh - 10px);
+            position: relative;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            cursor: cell;
+        }
+
+        @keyframes glitchBorder {
+
+            0%,
+            100% {
+                box-shadow: 0 0 15px #00d9ff, 0 0 25px #00ffff;
+            }
+
+            50% {
+                box-shadow: 3px 3px 15px #018a8a, -3px -3px 25px #00ffff;
+            }
+        }
+
+        .logo-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: auto;
+            height: auto;
+            display: block;
+            text-decoration: none;
+            cursor: crosshair;
+            z-index: 999;
+        }
+
+        .logo {
+            font-size: clamp(3px, 1vw, 9px);
+            line-height: 1;
+            color: #ffe600;
+            white-space: pre;
+            text-align: left;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .logojohn {
+            position: absolute;
+            top: 20px; /* Zachováno */
+            right: 20px; /* Přidáno pro zarovnání doprava */
+            font-size: clamp(3px, 1vw, 9px);
+            line-height: 1;
+            color: #ffe600;
+            white-space: pre;
+            text-align: right; /* Změna z left na right pro zarovnání textu doprava */
+            width: auto; /* Změna z 100%, aby se přizpůsobil obsahu */
+            height: auto; /* Změna z 100%, aby se přizpůsobil obsahu */
+            overflow: hidden;
+            line-height: 1;
+            cursor: cell;
+        }
+
+
+        
+
+
+
+        
+        .loading-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 8vw;
+            height: clamp(6px, 2vw, 22px);
+            background-color: transparent;
+            font-size: clamp(4px, 1vw, 14px);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 999;
+            cursor: cell;
+        }
+
+        .loading-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background-color: #ff00ff52;
+            animation: loadProgress var(--animation-duration, 30s) linear forwards;
+            --target-width: 98%;
+        }
+
+        @keyframes loadProgress {
+            0% {
+                width: 0;
+            }
+
+            100% {
+                width: var(--target-width);
+            }
+        }
+
+        .loading-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 999;
+        }
+
+        .button-group {
+            position: absolute;
+            bottom: 20px;
+            left: 50%; /* Posune střed tlačítek doprostřed stránky */
+            transform: translateX(-50%); /* Zarovná střed tlačítek na střed osy X */
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Mezera mezi tlačítky */
+            z-index: 999;
+        }
+        
+
+        .wallet-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .wallet-button {
+            padding: 8px 16px;
+            background-color: #ffe600;
+            font-size: clamp(4px, 1vw, 14px);
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 4px;
+            cursor: crosshair;
+            font-family: 'Consolas', monospace;
+        }
+
+        .wallet-button:hover:not(:disabled) {
+            background-color: #00f0a0;
+        }
+
+        .wallet-button:disabled {
+            cursor: not-allowed;
+        }
+
+        .wallet-dropdown {
+            position: absolute;
+            bottom: 100%;
+            font-size: clamp(4px, 1vw, 14px);
+            left: 0;
+            background-color: #807300;
+            border: 1px solid #00ffaa;
+            border-radius: 4px;
+            display: none;
+            min-width: 200px;
+            z-index: 1000;
+        }
+
+        .wallet-dropdown.active {
+            display: block;
+        }
+
+        .wallet-dropdown-item {
+            padding: 8px 12px;
+            font-size: clamp(4px, 1vw, 14px);
+            color: #ffffff;
+            cursor: crosshair;
+            font-family: 'Consolas', monospace;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .wallet-dropdown-item:hover {
+            background-color: #0056b3; /* Modré pozadí při hoveru */
+            color: #ffffff; /* Bílý text při hoveru */
+        }
+
+        .wallet-dropdown-item.selected {
+            background-color: #003d82;
+            color: #ffffff;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 1;
+            color: #37ff84;
+            line-height: clamp(6px, 2vw, 22px);
+            padding-left: clamp(2px, 0.5vw, 8px);
+        }
+
+        .error-text {
+            position: relative;
+            z-index: 1;
+            color: #ff5555;
+            opacity: 0;
+            transition: opacity 5.0s ease;
+        }
+
+        .rotating-cursor {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 2px;
+            height: 1.5em;
+            background-color: #00ffff;
+            animation: retroRotate 2.0s infinite steps(4);
+        }
+
+        @keyframes retroRotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(90deg);
+            }
+
+            50% {
+                transform: rotate(180deg);
+            }
+
+            75% {
+                transform: rotate(270deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background-color: #00ffff;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+
+        .warning-text {
+            padding: 3px;
+            background-color: rgba(255, 0, 0, 0.2);
+            font-size: clamp(4px, 1vw, 14px);
+            border: 2px solid #ff0000;
+            color: #ff0000;
+            font-family: 'Consolas', monospace;
+            text-align: center;
+            text-transform: uppercase;
+            animation: flicker 2.5s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000;
+            }
+            20%, 24%, 55% {
+                opacity: 0.6;
+                text-shadow: none;
+            }
+            21%, 23%, 56% {
+                opacity: 0.9;
+                text-shadow: 0 0 8px #ff0000, 0 0 15px #ff0000;
+            }
+        }
+
+        .modal {
+            display: none; /* Skrytý, dokud ho nezobrazíme */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Tmavé pozadí s průhledností */
+            z-index: 2000; /* Nad vším ostatním */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #000000;
+            border: 2px solid #ffe600;
+            padding: 20px;
+            text-align: center;
+            font-family: 'Consolas', monospace;
+            color: #ffe600;
+            font-size: 18px;
+            box-shadow: 0 0 15px #ff0000;
+            animation: flicker 1.5s infinite alternate; /* Použijeme tvou animaci */
+        }
+
+        .modal-button {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background-color: transparent;
+            border: 2px solid #ffe600;
+            color: #ffe600;
+            font-family: 'Consolas', monospace;
+            text-transform: uppercase;
+            cursor: crosshair;
+            transition: background-color 0.2s ease;
+        }
+
+        .modal-button:hover {
+            background-color: #ffe600;
+            color: #000000;
+        }
+
+        .close {
+            color: #49a175;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: crosshair;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #ff7f7f;
+        }
+
+        .typing-area {
+            position: absolute;
+            top: 160px; /* Pod logem */
+            left: 0;
+            width: 100vw;
+            height: calc(100vh - 140px); /* Prostor pro tlačítka dole */
+            margin: 0;
+            padding: 10px;
+            overflow-y: auto; /* Povolí scrollování */
+            overflow-x: hidden;
+            box-sizing: border-box;
+            z-index: 1; /* Pod logem a tlačítky */
+            cursor: cell;
+        }
+
+        .background-layer {
+            position: relative;
+            width: 100%;
+            font-family: 'Consolas', monospace;
+            font-size: clamp(6px, 3vw, 12px);
+            color: #385672;
+            white-space: pre; /* Zachová monospace formát */
+            line-height: 1;
+            text-align: left;
+            cursor: cell;
+        }
+
+        .fish-button {
+            position: absolute;
+            padding: 2px 4px;
+            background-color: #ffe600;
+            color: #000000;
+            border: none;
+            font-family: 'Consolas', monospace;
+            font-size: 15px;
+            cursor: crosshair;
+            z-index: 10; /* Nad ASCII textem */
+        }
+        .fish-button:hover {
+            background-color: #00f0a0;
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                overflow: auto; /* Povolí scrollování v obou směrech */
+            }
+            .typing-area {
+                overflow: auto; /* Povolí vertikální i horizontální scrollování */
+                width: 100%;
+                height: calc(100vh - 140px);
+            }
+            .background-layer {
+                font-size: clamp(1px, 2vw, 4px); /* Menší font pro mobil */
+                white-space: pre; /* Zalamování textu */
+            }
+
+            .wallet-button {
+                font-size: clamp(8px, 3vw, 12px); /* Zvětšení textu na tlačítku */
+            }
+            .warning-text {
+                font-size: clamp(8px, 3vw, 12px); /* Zvětšení textu "WARNING" */
+            }
+            .container {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end; /* Posune obsah dolů */
+                padding-bottom: 60px; /* Zajistí prostor dole */
+            }
+            .button-group {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            .wallet-container, .warning-text {
+                width: 100%;
+                text-align: center;
+            }
+            .loading-bar {
+                width: clamp(60px, 20vw, 80px); /* Větší šířka pro mobil */
+                height: clamp(10px, 4vw, 14px); /* Zachováme větší výšku */
+                font-size: clamp(6px, 3vw, 10px); /* Větší text */
+                display: flex;
+                justify-content: space-between; /* Rozloží procenta a error kód */
+                overflow: visible; /* Zobrazí přesahující text */
+            }
+            .progress-text, .error-text {
+                font-size: clamp(6px, 3vw, 10px); /* Větší text */
+            }
+        }
+
+    </style>
+  <script type="module" crossorigin src="/assets/index-DdlICw9A.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BHYloR28.css">
+</head>
+
+<body>
+    <div class="container" id="section-1">
+        <a href="https://0null.cz/mw0rld/" id="logo-link" class="logo-link">
+            <div class="logo" id="logo-text"></div>
+        </a>
+        <div class="logojohn" id="logo-john"></div>
+        <div class="typing-area" id="typing-text">
+            <div class="background-layer" id="background-text">
+            </div>
+        </div>
+        <div class="loading-bar-container">
+            <div class="loading-bar">
+                <span class="progress-text">0%</span>
+                <span class="error-text"></span>
+            </div>
+        </div>
+        <div class="button-group">
+            <div class="wallet-container">
+                <button class="wallet-button" id="connect-wallet">Connect Wallet</button>
+                <div class="wallet-dropdown" id="wallet-dropdown"></div>
+            </div>
+            
+            <div class="warning-text">
+                <p>WARNING: You'll lose coins here! No real Fish! NFT unlock later!</p>
+            </div>
+        </div>
+
+        <div class="rotating-cursor"></div>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <p id="modal-text"></p>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p id="modal-message"></p>
+            <button id="modal-close" class="modal-button">OK</button>
+        </div>
+    </div>
+
+    
+</body>
+
+</html>
