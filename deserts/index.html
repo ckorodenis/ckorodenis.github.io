@@ -16,7 +16,6 @@
             min-height: 100vh;
             position: relative;
             cursor: cell;
-            overflow-y: auto;
             overflow-x: hidden;
             padding-bottom: 20px;
         }
@@ -24,6 +23,42 @@
         .page {
             opacity: 0;
             transition: opacity 0.5s ease-in; /* Plynulý přechod pro zobrazení */
+        }
+
+        /* Skrytí posuvníku na začátku */
+        body.no-scrollbar,
+        .page.no-scrollbar {
+            overflow: hidden !important; /* Schová posuvník */
+        }
+
+        /* Styl scrollbaru s plynulým přechodem */
+        ::-webkit-scrollbar {
+            width: 0; /* Začíná schovaný */
+            transition: width 0.5s ease-in; /* Plynulý přechod pro šířku */
+        }
+
+        body.scrollbar-visible ::-webkit-scrollbar {
+            width: 10px; /* Po zobrazení má plnou šířku */
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #928800;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b3a700;
+        }
+
+        /* Podpora pro Firefox */
+        body,
+        .page {
+            scrollbar-color: #928800 #000000;
+            scrollbar-width: thin;
         }
 
 
@@ -1687,11 +1722,19 @@ XP - Level
 
         // Initialization
         window.addEventListener('load', () => {
+            // Přidá třídu pro skrytí posuvníku
+            document.body.classList.add('no-scrollbar');
+            document.querySelector('.page').classList.add('no-scrollbar');
+
             setTimeout(() => {
                 document.querySelector('.page').style.opacity = '1';
                 typeText(document.getElementById('logo-text'), asciiArt, 5);
                 typeWelcomeText();
                 updateLoadingBar();
+                // Odstraní třídu pro skrytí a přidá třídu pro zobrazení posuvníku
+                document.body.classList.remove('no-scrollbar');
+                document.querySelector('.page').classList.remove('no-scrollbar');
+                document.body.classList.add('scrollbar-visible');
                 try {
                     generateOasis();
                 } catch (e) {
