@@ -55,11 +55,14 @@
             left: 50%;
             transform: translateX(-50%);
             bottom: 15%;
+            top: 15%;
             justify-content: center;
             align-items: center;
+            align-items: flex-start;
             opacity: 1;
             transition: opacity 2s ease-in-out;
             width: 70%;
+            height: 80vh;
         }
         .modal.active, .modal.show {
             display: flex;
@@ -83,7 +86,9 @@
             font-size: clamp(12px, 1vw, 16px);
             padding: 20px;
             border: 5px solid #ffa600;
-            width: auto;
+            width: 100%;
+            max-height: 75vh;
+            overflow-y: auto;
             text-align: center;
             color: #ffa600;
             font-family: monospace;
@@ -581,11 +586,133 @@
             </div>
         </div>
 
+        <div id="futureOasesModal" class="modal">
+            <div class="modal-content">
+                <h3>The Future of Oases</h3>
+                <div style="white-space: pre-wrap; text-align: left; font-family: monospace; font-size: clamp(12px, 1vw, 16px); color: #ffa600;">
+        Introduction
+        ---&gt;
+MW0rld Deserts is a new environment waiting for players to start using it. 
+On the planet MW0rld, where many anomalies occur, there is a large, vast desert that forms a wide belt around the entire circumference and is the site of constant battles for rare elements and mineral-enriched water that can react to the planet's magnetic field. These are the building blocks of every advanced technology on the planet MW0rld. However, it is a very inhospitable place. Temperatures, advanced machines, artificial intelligence, and UV rays are your enemies, as is the radioactive material you have obtained if it is not processed quickly. Every machine needs fuel, every machine needs coolant, and no function or activity here can do without the large amount of capital that will allow you to power your own Oasis!
+
+        The Cornerstones
+        ---&gt;
+Have been laid. 
+They will be refined, moved, and perhaps even replaced. 
+There is still a lot of work to be done. We are not rushing or cutting corners; everything must be balanced, functional, and fun. 
+Your Oasis will be your digital enterprise that you need to take care of, otherwise it will be irreversibly destroyed. 
+The Oasis will be burned, literally. Below are the main game mechanics, this is a working version that will undergo revisions. 
+
+        Oases and Resources
+        ---&gt;
+An oasis is a completely on-chain NFT (max 50,000 players/alliances). 
+Oases can contain many items, machines, and things. Players' statuses, water indicators, UV, and radiation (RAD) are displayed next to the oasis.
+At 0 HP, the oasis is permanently destroyed, the NFT is unusable, and cannot be restored. 
+Water is pumped by a machine, maintenance every 2 days, no maintenance for a week = failure. 
+Without water, the oasis loses 20 HP/day, regeneration 3 HP/day (max 100%). 
+The water filter is changed daily, otherwise water cannot be pumped or transported to the machines. 
+The water supply increases at each level for special tokens and RAD. 
+You get RAD when pumping water, PvP, or from raiders; max 10 pieces, excess damages robots and the oasis.
+Sell 7 RAD per week, offline for 7 days = loss of all RAD for the week due to rapid half-life. 
+PUR is used to enrich water as fuel/coolant; robots burn PUR.
+UV &gt; randomly, increases water consumption for cooling, high UV reduces turret efficiency by 15% and water loss by 5%/day.
+
+        Game mechanics
+        ---&gt;
+Machine maintenance manual code entry, robots repair towers (water and PUR consumption). 
+Robots cannot handle RAD (damages their artificial brain). 
+Offline &gt; loss of 3 levels every 2 days without maintenance, all water and RAD per week. 
+HP locations &gt; e.g. base: 100, north: 100, south: 67, tied to level (1 level = 100 HP). 
+Leveling system &gt; 1 level = 0 XP, 2 levels = 2000 XP, 6 levels = 240,000 XP, and so on.
+XP from battles, element sales, or PvP cannot be purchased. 
+Turrets defend, robots maintain/repair, can be purchased. 
+Destroying a robot due to lack of water adds 5 RAD and a chance for an element. 
+Turrets/robot upgrades &gt; special elements and PUR, 10% chance of failure (loss of resources).
+
+        Combat and PvP
+        ---&gt;
+Boss battles (lvl 10) &gt; big rewards, random cycle, depends on weapons/supplies. 
+Only a well-maintained oasis can withstand raids/PvP. 
+PvP &gt; attacker chooses direction (north/south/east/west), robots, consumes 5 RAD and elements. 
+PvP wears out robots, repair (PUR + water), otherwise they are destroyed/not returned/unusable. 
+After a PvP attack, the oasis must have enough water for repair, otherwise the robots/equipment will be destroyed. 
+In case of critical water, the player decides on the use (machines/robots/turrets), otherwise destruction is random. 
+Rewards &gt; PUR, XP, RAD/elements. Attack notification, response via Telegram NPC Korlur - OasisTerminal.
+
+        Alliance
+        ---&gt;
+A group of exactly 10 players, each with their own oasis. 
+Foundation &gt; everyone pays a fee from different wallets, SC issues NFT alliance oases with 10 ownership shares (each 1/10). 
+Each player can only transfer their share to another wallet; it is not possible to leave without transferring. 
+With fewer than 10 owners, the alliance will not be founded. 
+Resource sharing, PvP coordination. 
+Membership &gt; lock resources (water/PUR/RAD) in a vault. 
+Main oasis bonus HP +10%, UV resistance; destruction/0HP = loss of 50% of vault resources. 
+    
+    Special roles (from level 5) &gt; 
+        &gt; Technician &lt;&gt; 2x, PUR + 1 RAD, robot/turret repairs 20% cheaper/faster
+        &gt; Tactician &lt;&gt; 2x, PUR + 2 elements, +10% PvP success, better attack direction planning
+        &gt; Guardian &lt;&gt; 1x, 4 RAD + 1 element, +15% turret resistance to UV/storms
+        &gt; Prospector &lt;&gt; 2x, 2 RAD + PUR, +25% chance of RAD when pumping water
+        &gt; Commander &lt;&gt; 1x, PUR + 3 elements, coordinates alliance responses to events, +5% HP to all oases
+        &gt; Engineer &lt;&gt; 1x, 3 RAD + 2 elements, reduces the risk of upgrade failure to 5%
+        &gt; Spy &lt;&gt; 1x, 4 elements + 1 RAD, reveals weaknesses of enemy oases before PvP 
+
+PvP &gt; alliance must approve combat with 8/10 votes; can also attack individual players, but gains few materials/rewards. 
+If 2 players leave/are permanently offline, vote on burning the oasis: min. 8 votes to activate, then NFT burned, remaining 8 members get everything equally.
+
+        Daily missions
+        ---&gt;
+Every day, a creative mission with an 8-hour time limit &gt; collect RAD from the geyser during a UV storm, destroy raiders without losing water, upgrade your robot under time pressure. 
+Rewards &gt; XP, elements, PUR/RAD; increase the chance of a boss.
+
+        Critical events
+        ---&gt;
+Randomly once a week &gt; 
+    &gt; Sandstorms &lt;&gt; water consumption +30% for cooling, turret damage 10 HP/day, lasts 1-2 days, manual shield for PUR
+    &gt; Frosty night &lt;&gt; robot efficiency -20%, PUR for heating +15%, lasts through the night, risk of machine failure
+    &gt; Magnetic fluctuations &lt;&gt; failure repairs 20%, RAD +2, chance of element when pumping, lasts 4-6 hours
+
+        Limited events
+        ---&gt;
+Once a month "raider invasion" 24 hours, random attacks on alliances, quick response required (role coordination, vault)
+United alliances repel and earn tokens for upgrades (+10% water permanently).
+
+        Reputation system
+        ---&gt;
+Linked to achievements as NFT (for achievements, e.g., "repel 5 PvP," "10 missions without losses"). Burnable for limited/permanent robots (e.g., durable robot with lower water consumption, alliance super guard +HP).
+
+        HP &amp; XP system
+        ---&gt;
+XP - Level
+    &gt;
+    0XP	  &gt; 1 lvl 
+    2000XP	  &gt; 2 lvl
+    4000XP    &gt; 3 lvl
+    12000XP   &gt; 4 lvl
+    48000XP   &gt; 5 lvl
+    240000XP  &gt; 6 lvl
+    ? ? ? XP  &gt; ? lvl
+
+100HP x Level
+    &gt;
+    1 lvl = 100HP
+    2 lvl = 200HP
+    3 lvl = 300HP
+    4 lvl = 400HP
+    5 lvl = 500HP
+    6 lvl = 600HP
+    ? lvl = ? HP
+                </div>
+            </div>
+        </div>
+
         <div class="wallet-container">
             <button class="wallet-button" id="build-oasis-button">Build an oasis for 10 MAS</button>
             <div class="wallet-button-group">
                 <button class="wallet-button" id="connect-wallet">Connect Wallet</button>
                 <button class="disconnect-button" id="disconnect-wallet">×</button>
+                <button class="wallet-button" id="future-oases-btn">The future of Oases</button>
             </div>
             <div class="wallet-dropdown" id="wallet-dropdown"></div>
         </div>
@@ -1410,6 +1537,25 @@
             welcomeText.style.bottom = '70px';
             buildOasisButton.style.bottom = '140px';
         }
+
+        document.getElementById('future-oases-btn').addEventListener('click', () => {
+            const modal = document.getElementById('futureOasesModal');
+            modal.classList.add('active');
+            // Zavři modal kliknutím mimo obsah
+            const closeHandler = (e) => {
+                if (!modal.querySelector('.modal-content').contains(e.target)) {
+                    modal.classList.add('fade-out');
+                    setTimeout(() => {
+                        modal.classList.remove('active', 'fade-out');
+                        document.removeEventListener('click', closeHandler);
+                    }, 1000);
+                }
+            };
+            setTimeout(() => {
+                document.addEventListener('click', closeHandler);
+            }, 100);
+        });
+
 
         // Oasis event listeners
         const canvas = document.getElementById('oasisCanvas');
