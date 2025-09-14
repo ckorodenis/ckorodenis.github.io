@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MW0rld Deserts</title>
+    <link rel="icon" type="image/png" href="/deserts/assets/favi_deserts-JyWRvrTQ.png">
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #000000;
+            color: #928800;
+            margin: 0;
+            padding: 0;
+            display: block;
+            min-height: 100vh;
+            position: relative;
+            cursor: cell;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        .page {
+            opacity: 0;
+            transition: opacity 0.5s ease-in; /* Plynulý přechod pro zobrazení */
+        }
+
+
+        button,
+        a,
+        input,
+        select,
+        [onclick],
+        [type="submit"],
+        .interactive {
+            cursor: crosshair;
+        }
+        button:hover,
+        a:hover,
+        input:hover,
+        select:hover,
+        [onclick]:hover {
+            cursor: crosshair;
+        }
+        .typing-text {
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            background-color: #000;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 300;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 15%;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 2s ease-in-out;
+            width: 70%;
+        }
+        .modal.active, .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+        .modal.fade-out {
+            opacity: 0;
+        }
+        .modal-contentstats {
+            background-color: #000000;
+            font-size: clamp(12px, 1vw, 16px);
+            padding: 20px;
+            border: 5px solid #ffa600;
+            width: auto;
+            text-align: left;
+            color: #ffa600;
+            font-family: monospace;
+        }
+        .modal-content {
+            background-color: #000000;
+            font-size: clamp(12px, 1vw, 16px);
+            padding: 20px;
+            border: 5px solid #ffa600;
+            width: auto;
+            text-align: center;
+            color: #ffa600;
+            font-family: monospace;
+        }
+        .modal-content h3 {
+            margin: 10px 0;
+            font-size: clamp(14px, 1.5vw, 18px);
+            color: #ffa600;
+        }
+
+        .modal-content p {
+            margin: 5px 0;
+            font-size: clamp(12px, 1vw, 16px);
+        }
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                opacity: 1;
+                text-shadow: 0 0 5px #ffa600, 0 0 10px #ff00ff;
+            }
+            20%, 24%, 55% { opacity: 0.6; text-shadow: none; }
+            21%, 23%, 56% { opacity: 0.9; text-shadow: 0 0 8px #ffa600, 0 0 15px #ffa600; }
+        }
+        .modal-button {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background-color: transparent;
+            border: 2px solid #ffa600;
+            color: #ffa600;
+            font-family: monospace;
+            text-transform: uppercase;
+            cursor: crosshair;
+            transition: background-color 0.2s ease;
+        }
+        .modal-button:hover {
+            background-color: #ffa600;
+            color: #000000;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: crosshair;
+        }
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: crosshair;
+        }
+        .logo-link {
+            position: relative;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            cursor: crosshair;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            font-size: clamp(5px, 1vw, 9px);
+            line-height: 1;
+            color: #ffa600;
+            white-space: pre;
+            text-align: left;
+            background-color: #000;
+            overflow: hidden;
+            
+        }
+        .logo-icon {
+            width: 100px;
+            height: auto;
+            margin-left: 10px;
+            border-radius: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out 6s forwards;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .loading-bar {
+            width: clamp(100px, 30%, 200px);
+            height: clamp(6px, 2vw, 22px);
+            background-color: transparent;
+            font-size: clamp(10px, 1vw, 14px);
+            margin-top: 50px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .loading-bar::before {
+            content: '';
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background-color: #ff00ff52;
+            animation: loadProgress var(--animation-duration, 30s) linear forwards;
+        }
+        @keyframes loadProgress {
+            0% { width: 0; }
+            100% { width: var(--target-width); }
+        }
+        .progress-text {
+            position: absolute;
+            z-index: 1;
+            color: #37ff84;
+            line-height: clamp(6px, 2vw, 22px);
+            padding-left: clamp(2px, 0.5vw, 8px);
+        }
+        .error-text {
+            position: absolute;
+            margin-left: 40px;
+            z-index: 1;
+            color: #ffa600;
+            opacity: 0;
+            transition: opacity 5.0s ease;
+        }
+        .rotating-cursor {
+            position: relative;
+            bottom: 20px;
+            right: 20px;
+            width: 2px;
+            height: 1.5em;
+            background-color: #ffa600;
+            animation: retroRotate 2.0s infinite steps(4);
+        }
+        @keyframes retroRotate {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg); }
+            50% { transform: rotate(180deg); }
+            75% { transform: rotate(270deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .bottom-container {
+            position: relative;
+            margin-top: 50px;
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 200;
+        }
+        @media screen and (min-width: 1000px) {
+            .bottom-container {
+                margin-top: 20px;
+            }
+        }
+
+
+        .wallet-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .wallet-button-group {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .wallet-button {
+            padding: 8px 16px;
+            background-color: #ffa600;
+            font-size: clamp(10px, 1vw, 14px);
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 15px;
+            cursor: crosshair;
+            font-family: monospace;
+            text-align: center;
+        }
+        .wallet-button:hover:not(:disabled) {
+            background-color: #ff6600;
+        }
+        .wallet-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .disconnect-button {
+            padding: 8px;
+            background-color: transparent;
+            border: 2px solid #ffa600;
+            color: #ffa600;
+            font-size: clamp(10px, 1vw, 14px);
+            border-radius: 15px;
+            cursor: crosshair;
+            font-family: monospace;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .disconnect-button.visible {
+            opacity: 1;
+        }
+        .disconnect-button:hover {
+            background-color: #ffa600;
+            color: #000000;
+        }
+        .wallet-dropdown {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background-color: #000000;
+            border: 1px solid #ffa600;
+            border-radius: 15px;
+            display: none;
+            min-width: 200px;
+            z-index: 1000;
+        }
+        .wallet-dropdown.active {
+            display: block;
+        }
+        .wallet-dropdown-item {
+            padding: 8px 12px;
+            font-size: clamp(15px, 1.5vw, 16px);
+            color: #ffa600;
+            cursor: crosshair;
+            font-family: monospace;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .wallet-dropdown-item:hover {
+            background-color: #ffa600;
+            color: #000000;
+        }
+        .warning-text {
+            padding: 3px;
+            background-color: rgba(255, 0, 0, 0.2);
+            font-size: clamp(10px, 1vw, 14px);
+            border: 2px solid #ffa600;
+            color: #ff0000;
+            font-family: monospace;
+            text-align: center;
+            text-transform: uppercase;
+            animation: flicker 2.5s infinite alternate;
+            width: clamp(150px, 50%, 300px);
+        }
+        .welcome-text {
+            position: relative;
+            bottom: 70px;
+            margin-top: 80px;
+            color: #ffa600;
+            font-family: monospace;
+            font-size: clamp(14px, 2vw, 18px);
+            text-align: center;
+            z-index: 10;
+        }
+        #build-oasis-button {
+            background-color: #ffa600;
+            color: white;
+            border: none;
+            margin-left: 35px;
+            border-radius: 4px;
+            cursor: crosshair;
+            font-family: monospace;
+            font-size: clamp(10px, 1vw, 14px);
+            z-index: 10;
+            display: none;
+        }
+        #build-oasis-button:hover {
+            background-color: #ff6600;
+        }
+        #build-oasis-button.active {
+            display: block;
+            opacity: 1;
+        }
+        .log-container {
+            width: clamp(150px, 70%, 300px);
+            max-height: 150px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid #2d87aa;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: clamp(8px, 1vw, 10px);
+            color: #2d87aa;
+            z-index: 1000;
+        }
+        .log-entry {
+            margin: 2px 0;
+            opacity: 1;
+            transition: opacity 5s ease-out;
+        }
+        .log-entry.fade-out {
+            opacity: 0;
+        }
+        .oasis-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            top: 70px; 
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            width: clamp(100px, 80%, 600px);
+        }
+        canvas {
+            border: 2px solid #ffa600;
+            border-radius: 20px;
+            image-rendering: pixelated;
+            width: 80%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+        }
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            background-color: #000000;
+            z-index: 10;
+        }
+        input[type="text"] {
+            background-color: #000000;
+            border: 2px solid #ffa600;
+            border-radius: 15px;
+            color: #ffa600;
+            padding: 5px;
+            margin: 5px 0;
+            width: 300px;
+            font-family: monospace;
+            font-size: clamp(10px, 1vw, 14px);
+            cursor: crosshair;
+        }
+        input[type="text"]::placeholder {
+            color: #ffcc99;
+            opacity: 1;
+        }
+        input[type="text"]:focus::placeholder {
+            color: transparent;
+        }
+        input[readonly] {
+            background-color: #161616;
+            cursor: default;
+        }
+        select {
+            background-color: #000000;
+            border: 2px solid #ffa600;
+            border-radius: 15px;
+            color: #ffa600;
+            padding: 5px;
+            margin: 5px 0;
+            width: 150px;
+            font-family: monospace;
+            font-size: clamp(10px, 1vw, 14px);
+            cursor: crosshair;
+        }
+        select option {
+            background-color: #000000;
+            color: #ffa600;
+        }
+        button {
+            background-color: transparent;
+            border: 2px solid #ffa600;
+            border-radius: 15px;
+            color: #ffa600;
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: crosshair;
+            font-family: monospace;
+            font-size: clamp(10px, 1vw, 14px);
+        }
+        button:hover {
+            background-color: #ffa600;
+            color: #000000;
+        }
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            background-color: #000000;
+            z-index: 10;
+            width: 100%;
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .pixel {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border: 2px solid;
+        }
+        input[type="range"] {
+            width: 200px;
+            cursor: crosshair;
+        }
+        label {
+            margin-right: 10px;
+            font-family: monospace;
+            font-size: clamp(12px, 1vw, 18px);
+            color: #ffa600;
+        }
+        .dropdown-row {
+            font-size: clamp(10px, 1vw, 14px);
+            align-items: center;
+            margin: 5px 0;
+        }
+    </style>
+
+    <!-- Spuštění skriptu hned po načtení DOMu -->
+    <script src="/deserts/icon_mw0rld.js"></script>
+  <script type="module" crossorigin src="/deserts/assets/index-DukVt--v.js"></script>
+  <link rel="stylesheet" crossorigin href="/deserts/assets/index-D1RkIGxV.css">
+</head>
+<body>
+    <div class="page">
+
+
+    <a href="https://0null.cz/mw0rld/" id="logo-link" class="logo-link">
+        <div class="logo" id="logo-text"></div>
+        <img src="/deserts/icon_deserts.png" id="logo-icon" class="logo-icon" alt="Desert Icon">
+    </a>
+    <div class="oasis-container">
+        <div class="input-container">
+            <label for="tokenInput">Oasis >>></label>
+            <input type="text" id="tokenInput" placeholder=" - 00001 ~ 50000 - ">
+            <label for="scInput">Facilities >>></label>
+            <input type="text" id="scInput" readonly placeholder="Use the menu to fill ↙️">
+            <div class="dropdown-row">
+                <label>Turrets ></label>
+                <select id="turretRegion">
+                    <option value="north">North</option>
+                    <option value="south">South</option>
+                    <option value="west">West</option>
+                    <option value="east">East</option>
+                    <option value="base">Base</option>
+                </select>
+                <select id="turretType">
+                    <option value="t1">Watchtower</option>
+                    <option value="t2">Artillery Tower</option>
+                    <option value="t3">Sighting Tower</option>
+                    <option value="t4">Hippie Tower</option>
+                </select>
+                <button id="addTurretButton">↖️</button>
+            </div>
+            <div class="dropdown-row">
+                <label>Robots ></label>
+                <select id="robotRegion">
+                    <option value="north">North</option>
+                    <option value="south">South</option>
+                    <option value="west">West</option>
+                    <option value="east">East</option>
+                    <option value="base">Base</option>
+                </select>
+                <select id="robotType">
+                    <option value="r1">Repairer</option>
+                    <option value="r2">Watchman</option>
+                    <option value="r3">Drunkard</option>
+                    <option value="r4">Baker</option>
+                </select>
+                <button id="addRobotButton">↖️</button>
+            </div>
+            <div class="dropdown-row">
+                <button id="generateButton">Visit the Oasis</button>
+                <button id="oasisStats">🗺️</button>
+            </div>
+        </div>
+        <canvas id="oasisCanvas"></canvas>
+        <div class="slider-container">
+            <div class="slider-row">
+                <div class="pixel" style="background-color: #FFA500;"></div>
+                <label for="desertOpacity">></label>
+                <input type="range" id="desertOpacity" min="10" max="100" value="60">
+            </div>
+            <div class="slider-row">
+                <div class="pixel" style="background-color: #90EE90;"></div>
+                <label for="oasisOpacity">></label>
+                <input type="range" id="oasisOpacity" min="40" max="100" value="100">
+            </div>
+        </div>
+        <div class="welcome-text" id="welcome-text">To continue please join a registered MW0rld wallet</div>
+        <div id="modal" class="modal">
+            <div class="modal-content"></div>
+        </div>
+        <div id="statsModal" class="modal">
+            <div class="modal-contentstats"></div>
+        </div>
+    </div>
+
+    
+    <div class="bottom-container">
+        <div id="walletModal" class="modal">
+            <div class="modal-content">
+                <p id="wallet-modal-message"></p>
+            </div>
+        </div>
+
+        <div class="wallet-container">
+            <button class="wallet-button" id="build-oasis-button">Build an oasis for 10 MAS</button>
+            <div class="wallet-button-group">
+                <button class="wallet-button" id="connect-wallet">Connect Wallet</button>
+                <button class="disconnect-button" id="disconnect-wallet">×</button>
+            </div>
+            <div class="wallet-dropdown" id="wallet-dropdown"></div>
+        </div>
+        <div class="warning-text">
+            <p>_WARNING: Game offline!_</p>
+        </div>
+        <div class="loading-bar">
+            <span class="progress-text">0%</span>
+            <span class="error-text"></span>
+        </div>
+        <div id="log-container" class="log-container"></div>
+    </div>
+    </div>
+    
+    
+
+    <script>
+        // Oasis globals
+        let highlightedPoint = null;
+        let highlightSize = 1;
+        let highlightTargetSize = 1;
+        let lastHighlightTime = Date.now();
+        let points = [];
+        let pixels = [];
+        let desertPixels = [];
+        let desertOpacity = 0.6;
+        let oasisOpacity = 1.0;
+        let lastDesertUpdate = Date.now();
+
+        // Oasis functions
+        function seedRandom(seed) {
+            let h = 1779033703 ^ seed.length;
+            for (let i = 0; i < seed.length; i++) {
+                h = Math.imul(h ^ seed.charCodeAt(i), 3432918353);
+                h = (h << 13) | (h >>> 19);
+            }
+            let callCount = 0;
+            const values = [];
+            for (let i = 0; i < 1000; i++) {
+                h = Math.imul(h ^ (h >>> 16), 2246822507);
+                h = Math.imul(h ^ (h >>> 13), 3266489909);
+                values.push(((h ^= h >>> 16) >>> 0) / 4294967296);
+            }
+            return function() {
+                return values[callCount++ % values.length];
+            };
+        }
+
+        function perlinNoise(x, y, rng) {
+            const gridSize = 4;
+            const gx = Math.floor(x / gridSize);
+            const gy = Math.floor(y / gridSize);
+            const fx = (x % gridSize) / gridSize;
+            const fy = (y % gridSize) / gridSize;
+            const v00 = rng() * 2 - 1;
+            const v01 = rng() * 2 - 1;
+            const v10 = rng() * 2 - 1;
+            const v11 = rng() * 2 - 1;
+            const smooth = (t) => t * t * (3 - 2 * t);
+            const lerp = (a, b, t) => a + (b - a) * t;
+            const s = lerp(v00, v10, smooth(fx));
+            const t = lerp(v01, v11, smooth(fx));
+            return lerp(s, t, smooth(fy));
+        }
+
+        function isAreaFree(x, y) {
+            if (x < 0 || x >= 40 || y < 0 || y >= 40 || points.some(p => p.x === x && p.y === y)) {
+                return false;
+            }
+            return true;
+        }
+
+        function isMinimumDistance(x, y, excludeTypes = [], minDistance = 2) {
+            for (const p of points) {
+                if (excludeTypes.includes(p.type)) continue;
+                const dx = Math.abs(p.x - x);
+                const dy = Math.abs(p.y - y);
+                if (dx + dy < minDistance) {
+                    console.log(`Minimum distance not met: x=${x}, y=${y}, dx=${dx}, dy=${dy}, minDistance=${minDistance}, typ=${p.type}`);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+        const pixelTypes = {
+            desert: {
+                '#FFD700': 'Quartz',
+                '#FFA500': 'Feldspar',
+                '#FF8C00': 'Magnetite'
+            },
+            oasis: {
+                '#90EE90': 'Tall grass',
+                '#006400': 'Palm',
+                '#228B22': 'Shrub',
+                '#32CD32': 'Grass',
+                '#00FFFF': 'Small Pond',
+                '#00008B': 'Desert Borehole',
+                '#000000': 'WaterPump',
+                '#FFFFFF': 'IsoVault'
+            }
+        };
+
+        // Upravená funkce generateDesert
+        function generateDesert() {
+            desertPixels = [];
+            const rng = seedRandom(document.getElementById('tokenInput').value || 'oasis:00001');
+            for (let x = 0; x < 40; x++) {
+                for (let y = 0; y < 40; y++) {
+                    const noise = perlinNoise(x / 10, y / 10, rng);
+                    let color;
+                    if (noise < 0.3) {
+                        color = '#FFD700';
+                    } else if (noise < 0.6) {
+                        color = '#FFA500';
+                    } else {
+                        color = '#FF8C00';
+                    }
+                    desertPixels.push({ x, y, color });
+                }
+            }
+            lastDesertUpdate = Date.now();
+        }
+
+        function renderScene() {
+            const canvas = document.getElementById('oasisCanvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true, alpha: true });
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const now = Date.now();
+            const deltaTime = (now - lastHighlightTime) / 1000;
+            lastHighlightTime = now;
+            const speed = 5;
+            highlightSize += (highlightTargetSize - highlightSize) * speed * deltaTime;
+            highlightSize = Math.max(1, Math.min(2, highlightSize));
+            ctx.globalAlpha = desertOpacity;
+            desertPixels.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, 1, 1);
+            });
+            ctx.globalAlpha = oasisOpacity;
+            pixels.forEach(p => {
+                const isInteractive = points.some(point => point.x === p.x && point.y === p.y);
+                if (!isInteractive) {
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, 1, 1);
+                }
+            });
+            ctx.globalAlpha = 1.0;
+            points.forEach(p => {
+                if (['turret', 'robot', 'pump', 'IsoVault'].includes(p.type)) {
+                    let t, startColor, endColor;
+                    if (p.type === 'turret') {
+                        t = (Date.now() % 1000) / 1000;
+                        startColor = [0x8B, 0x45, 0x13];
+                        endColor = [0xFF, 0x00, 0xFF];
+                    } else if (p.type === 'robot') {
+                        t = (Date.now() % 1000) / 1000;
+                        startColor = [0xFF, 0x00, 0x00];
+                        endColor = [0x80, 0x80, 0x80];
+                    } else if (p.type === 'pump') {
+                        t = (Date.now() % 3000) / 3000;
+                        startColor = [0x00, 0x00, 0x00];
+                        endColor = [0xFF, 0xFF, 0x00];
+                    } else if (p.type === 'IsoVault') {
+                        t = (Date.now() % 3000) / 3000;
+                        startColor = [0xFF, 0xFF, 0xFF];
+                        endColor = [0xFF, 0x00, 0x00];
+                    }
+                    const lerp = (start, end, t) => Math.round(start + (end - start) * (Math.sin(t * Math.PI * 2) + 1) / 2);
+                    const r = lerp(startColor[0], endColor[0], t);
+                    const g = lerp(startColor[1], endColor[1], t);
+                    const b = lerp(startColor[2], endColor[2], t);
+                    const color = `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+                    ctx.fillStyle = color;
+                    if (!highlightedPoint || p.x !== highlightedPoint.x || p.y !== highlightedPoint.y) {
+                        ctx.fillRect(p.x, p.y, 1, 1);
+                    }
+                } else {
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, 1, 1);
+                }
+            });
+            if (highlightedPoint) {
+                let color = highlightedPoint.color;
+                if (['turret', 'robot', 'pump', 'IsoVault'].includes(highlightedPoint.type)) {
+                    let t, startColor, endColor;
+                    if (highlightedPoint.type === 'turret') {
+                        t = (Date.now() % 1000) / 1000;
+                        startColor = [0x8B, 0x45, 0x13];
+                        endColor = [0xFF, 0x00, 0xFF];
+                    } else if (highlightedPoint.type === 'robot') {
+                        t = (Date.now() % 1000) / 1000;
+                        startColor = [0xFF, 0x00, 0x00];
+                        endColor = [0x80, 0x80, 0x80];
+                    } else if (highlightedPoint.type === 'pump') {
+                        t = (Date.now() % 3000) / 3000;
+                        startColor = [0x00, 0x00, 0x00];
+                        endColor = [0xFF, 0xFF, 0x00];
+                    } else if (highlightedPoint.type === 'IsoVault') {
+                        t = (Date.now() % 3000) / 3000;
+                        startColor = [0xFF, 0xFF, 0xFF];
+                        endColor = [0xFF, 0x00, 0x00];
+                    }
+                    const lerp = (start, end, t) => Math.round(start + (end - start) * (Math.sin(t * Math.PI * 2) + 1) / 2);
+                    const r = lerp(startColor[0], endColor[0], t);
+                    const g = lerp(startColor[1], endColor[1], t);
+                    const b = lerp(startColor[2], endColor[2], t);
+                    color = `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+                }
+                ctx.fillStyle = color;
+                const size = highlightSize;
+                ctx.fillRect(highlightedPoint.x + 0.5 - size / 2, highlightedPoint.y + 0.5 - size / 2, size, size);
+            }
+            ctx.globalAlpha = 1.0;
+        }
+
+        function animatePoints() {
+            if (Date.now() - lastDesertUpdate >= 10000) {
+                generateDesert();
+            }
+            renderScene();
+            requestAnimationFrame(animatePoints);
+        }
+
+        function parseAndPlaceTurrets(data, areas, rng) {
+            if (!data) {
+                console.log('Žádná data pro turrets, přeskakuji');
+                return;
+            }
+            console.log('Parsuji turrets:', data);
+            const turretsData = {};
+            try {
+                data.split('_').forEach(segment => {
+                    if (!segment) {
+                        console.log('Prázdný segment turretů, přeskakuji');
+                        return;
+                    }
+                    console.log('Zpracovávám segment turretů:', segment);
+                    const firstColonIndex = segment.indexOf(':');
+                    if (firstColonIndex === -1) {
+                        console.log('Neplatný formát segmentu turretů (chybí dvojtečka):', segment);
+                        return;
+                    }
+                    const region = segment.slice(0, firstColonIndex);
+                    const values = segment.slice(firstColonIndex + 1).split(':').map(v => v.replace('t', '')).filter(v => v && ['1', '2', '3', '4'].includes(v)).slice(0, 4);
+                    if (!['north', 'south', 'west', 'east', 'base'].includes(region)) {
+                        console.log('Neplatná oblast turretů:', region);
+                        return;
+                    }
+                    if (values.length === 0) {
+                        console.log('Žádné platné hodnoty turretů pro oblast:', region);
+                        return;
+                    }
+                    turretsData[region] = values;
+                    console.log(`Přidáno do turretsData: region=${region}, values=`, values);
+                });
+                console.log('Výsledek parsování turretsData:', turretsData);
+                let totalPlacedTurrets = 0;
+                for (const region in turretsData) {
+                    const values = turretsData[region];
+                    const area = areas[region] || [];
+                    let placedTurrets = 0;
+                    const shuffledArea = [...area].sort(() => rng() - 0.5);
+                    console.log(`Umísťuji turrets v regionu ${region}: hodnoty=${values.length}, volných pixelů=${area.filter(p => isAreaFree(p.x, p.y)).length}`);
+                    for (const p of shuffledArea) {
+                        if (placedTurrets < values.length && totalPlacedTurrets < 4 && isAreaFree(p.x, p.y)) {
+                            points.push({ x: p.x, y: p.y, type: 'turret', value: `turret ${values[placedTurrets]}`, color: '#8B4513' });
+                            placedTurrets++;
+                            totalPlacedTurrets++;
+                        }
+                    }
+                    console.log(`Region ${region}: Umístěno ${placedTurrets} turretů`);
+                }
+            } catch (e) {
+                console.error('Chyba při parsování nebo umisťování turretů:', e);
+            }
+        }
+
+        function parseAndPlaceRobots(data, areas, rng) {
+            if (!data) {
+                console.log('Žádná data pro robots, přeskakuji');
+                return;
+            }
+            console.log('Parsuji robots:', data);
+            const robotsData = {};
+            try {
+                data.split('_').forEach(segment => {
+                    if (!segment) {
+                        console.log('Prázdný segment robotů, přeskakuji');
+                        return;
+                    }
+                    console.log('Zpracovávám segment robotů:', segment);
+                    const firstColonIndex = segment.indexOf(':');
+                    if (firstColonIndex === -1) {
+                        console.log('Neplatný formát segmentu robotů (chybí dvojtečka):', segment);
+                        return;
+                    }
+                    const region = segment.slice(0, firstColonIndex);
+                    const values = segment.slice(firstColonIndex + 1).split(':').map(v => v.replace('r', '')).filter(v => v && ['1', '2', '3', '4'].includes(v)).slice(0, 4);
+                    if (!['north', 'south', 'west', 'east', 'base'].includes(region)) {
+                        console.log('Neplatná oblast robotů:', region);
+                        return;
+                    }
+                    if (values.length === 0) {
+                        console.log('Žádné platné hodnoty robotů pro oblast:', region);
+                        return;
+                    }
+                    robotsData[region] = values;
+                    console.log(`Přidáno do robotsData: region=${region}, values=`, values);
+                });
+                console.log('Výsledek parsování robotsData:', robotsData);
+                let totalPlacedRobots = 0;
+                for (const region in robotsData) {
+                    const values = robotsData[region];
+                    const area = areas[region] || [];
+                    let placedRobots = 0;
+                    const shuffledArea = [...area].sort(() => rng() - 0.5);
+                    console.log(`Umísťuji robots v regionu ${region}: hodnoty=${values.length}, volných pixelů=${area.filter(p => isAreaFree(p.x, p.y)).length}`);
+                    for (const p of shuffledArea) {
+                        if (placedRobots < values.length && totalPlacedRobots < 4 && isAreaFree(p.x, p.y)) {
+                            points.push({ x: p.x, y: p.y, type: 'robot', value: `robot ${values[placedRobots]}`, color: '#FF0000' });
+                            placedRobots++;
+                            totalPlacedRobots++;
+                        }
+                    }
+                    console.log(`Region ${region}: Umístěno ${placedRobots} robotů`);
+                }
+            } catch (e) {
+                console.error('Chyba při parsování nebo umisťování robotů:', e);
+            }
+        }
+
+        function addTurret() {
+            const region = document.getElementById('turretRegion').value;
+            const type = document.getElementById('turretType').value;
+            const scInput = document.getElementById('scInput');
+            let [turretsPart = '', robotsPart = ''] = scInput.value.split(',');
+            turretsPart = turretsPart.startsWith('turrets=') ? turretsPart.slice(8) : '';
+            const turretsByRegion = {};
+            if (turretsPart) {
+                turretsPart.split('_').forEach(segment => {
+                    if (segment) {
+                        const [reg, ...types] = segment.split(':');
+                        turretsByRegion[reg] = types.filter(t => t);
+                    }
+                });
+            }
+            const totalTurrets = Object.values(turretsByRegion).reduce((sum, types) => sum + types.length, 0);
+            if (totalTurrets >= 4) {
+                alert('Only 4 turrets in each oasis please. Is that crazy arsenal enough for you, or do you think it\'s not? You can fill it up with a few bots if you haven\'t already... if you have, sorry to lecture you!');
+                return;
+            }
+            if (!turretsByRegion[region]) {
+                turretsByRegion[region] = [];
+            }
+            if (turretsByRegion[region].length >= 4) {
+                alert(`'Only 4 turrets in each oasis please. Is that crazy arsenal enough for you, or do you think it\'s not? You can fill it up with a few bots if you haven\'t already... if you have, sorry to lecture you! Region ${region} is full!'`);
+                return;
+            }
+            turretsByRegion[region].push(type);
+            const newTurrets = Object.entries(turretsByRegion)
+                .map(([reg, types]) => `${reg}:${types.join(':')}`)
+                .join('_');
+            scInput.value = `turrets=${newTurrets}${robotsPart ? ',' + robotsPart : ''}`;
+            console.log(`Přidán turret: region=${region}, type=${type}, scInput=${scInput.value}`);
+        }
+
+        function addRobot() {
+            const region = document.getElementById('robotRegion').value;
+            const type = document.getElementById('robotType').value;
+            const scInput = document.getElementById('scInput');
+            let [turretsPart = '', robotsPart = ''] = scInput.value.split(',');
+            robotsPart = robotsPart.startsWith('robots=') ? robotsPart.slice(7) : '';
+            const robotsByRegion = {};
+            if (robotsPart) {
+                robotsPart.split('_').forEach(segment => {
+                    if (segment) {
+                        const [reg, ...types] = segment.split(':');
+                        robotsByRegion[reg] = types.filter(t => t);
+                    }
+                });
+            }
+            const totalRobots = Object.values(robotsByRegion).reduce((sum, types) => sum + types.length, 0);
+            if (totalRobots >= 4) {
+                alert('More than four robots already means a very high risk of AI mutiny. The number must always be even, odd numbers are destabilizing for teamwork. And six robots get the job done faster, but paradoxically, they then manage to help each other, leading to uncontrollable information transfer between robots from different stations. //This text did not get you an LLM//');
+                return;
+            }
+            if (!robotsByRegion[region]) {
+                robotsByRegion[region] = [];
+            }
+            if (robotsByRegion[region].length >= 4) {
+                alert(`More than four robots already means a very high risk of AI mutiny. The number must always be even, odd numbers are destabilizing for teamwork. And six robots get the job done faster, but paradoxically, they then manage to help each other, leading to uncontrollable information transfer between robots from different stations. //This text did not get you an LLM// >> In ${region}`);
+                return;
+            }
+            robotsByRegion[region].push(type);
+            const newRobots = Object.entries(robotsByRegion)
+                .map(([reg, types]) => `${reg}:${types.join(':')}`)
+                .join('_');
+            scInput.value = `${turretsPart ? turretsPart + ',' : ''}robots=${newRobots}`;
+            console.log(`Přidán robot: region=${region}, type=${type}, scInput=${scInput.value}`);
+        }
+
+        function generateOasis() {
+            points = [];
+            pixels = [];
+            desertPixels = [];
+            const canvas = document.getElementById('oasisCanvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true, alpha: true });
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const tokenInput = document.getElementById('tokenInput').value || '00001';
+            if (!/^\d{5}$/.test(tokenInput) || tokenInput < '00001' || tokenInput > '50000') {
+                alert('The designation of each oasis consists of a five-digit numerical designation in the range of 00001 ~ 50000. So for example 00009, or 00038, even 00193, or certainly 05630, even 11365 will work! Hey maybe even 33156 will work! Now I think 49999 will work, go try it!!! But marking 10 or 009 really won\'t work...');
+                return;
+            }
+            const tokenId = `oasis:${tokenInput}`;
+            const scInput = document.getElementById('scInput');
+            const scDataRaw = scInput.value || '';
+            const rng = seedRandom(tokenId);
+            generateDesert();
+            const centerX = 20 + (rng() - 0.5) * 8;
+            const centerY = 20 + (rng() - 0.5) * 8;
+            const radiusX = 6 + rng() * 4;
+            const radiusY = 5 + rng() * 3;
+            const areas = { north: [], south: [], east: [], west: [], base: [] };
+            for (let x = -12; x <= 12; x++) {
+                for (let y = -12; y <= 12; y++) {
+                    const dist = Math.sqrt((x / radiusX) ** 2 + (y / radiusY) ** 2);
+                    const noise = perlinNoise(x + centerX, y + centerY, rng) * 0.4;
+                    if (dist <= 1 + noise) {
+                        const px = Math.round(centerX + x);
+                        const py = Math.round(centerY + y);
+                        if (px >= 0 && px < 40 && py >= 0 && py < 40) {
+                            const rand = rng();
+                            let color;
+                            if (rand < 0.70) color = '#90EE90';
+                            else if (rand < 0.85) color = '#006400';
+                            else if (rand < 0.90) color = '#228B22';
+                            else color = '#32CD32';
+                            pixels.push({ x: px, y: py, color });
+                            const distToCenter = Math.hypot(px - centerX, py - centerY);
+                            if (distToCenter <= 5) {
+                                areas.base.push({ x: px, y: py });
+                            } else {
+                                const angle = Math.atan2(py - centerY, px - centerX);
+                                if (angle >= -Math.PI * 3/4 && angle < -Math.PI * 1/4) {
+                                    areas.north.push({ x: px, y: py });
+                                } else if (angle >= Math.PI * 1/4 && angle < Math.PI * 3/4) {
+                                    areas.south.push({ x: px, y: py });
+                                } else if (angle >= -Math.PI * 1/4 && angle < Math.PI * 1/4) {
+                                    areas.east.push({ x: px, y: py });
+                                } else {
+                                    areas.west.push({ x: px, y: py });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            const waterCenterX = Math.round(centerX + (rng() - 0.5) * radiusX * 0.5);
+            const waterCenterY = Math.round(centerY + (rng() - 0.5) * radiusY * 0.5);
+            console.log(`Pokus o umístění vrtu: x=${waterCenterX}, y=${waterCenterY}`);
+            if (isAreaFree(waterCenterX, waterCenterY)) {
+                points.push({ x: waterCenterX, y: waterCenterY, type: 'water', value: 'Deepwater borehole', color: '#00008B' });
+                console.log(`Vrt umístěn: x=${waterCenterX}, y=${waterCenterY}`);
+            } else {
+                console.log(`Vrt neumístěn: isAreaFree false`);
+                return;
+            }
+            const pumpOffsets = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+            let pumpPlaced = false;
+            const shuffledOffsets = pumpOffsets.sort(() => rng() - 0.5);
+            for (const [dx, dy] of shuffledOffsets) {
+                const pumpX = waterCenterX + dx;
+                const pumpY = waterCenterY + dy;
+                console.log(`Pokus o umístění WaterPump: x=${pumpX}, y=${pumpY}`);
+                if (isAreaFree(pumpX, pumpY)) {
+                    points.push({ x: pumpX, y: pumpY, type: 'pump', value: 'WaterPump', color: '#000000' });
+                    console.log(`WaterPump umístěn: x=${pumpX}, y=${pumpY}`);
+                    pumpPlaced = true;
+                    break;
+                }
+            }
+            if (!pumpPlaced) {
+                console.log(`WaterPump neumístěn: žádné volné místo vedle vrtu`);
+                return;
+            }
+            let IsoVaultX, IsoVaultY;
+            let attempts = 0;
+            do {
+                IsoVaultX = Math.round(centerX + (rng() - 0.5) * 5);
+                IsoVaultY = Math.round(centerY + (rng() - 0.5) * 5);
+                console.log(`Pokus o umístění IsoVault: x=${IsoVaultX}, y=${IsoVaultY}, pokus=${attempts + 1}`);
+                attempts++;
+                if (attempts > 50) break;
+            } while (
+                !isAreaFree(IsoVaultX, IsoVaultY) ||
+                !isMinimumDistance(IsoVaultX, IsoVaultY, [], 2) ||
+                !areas.base.some(p => Math.abs(p.x - IsoVaultX) <= 1 && Math.abs(p.y - IsoVaultY) <= 1)
+            );
+            if (attempts <= 50) {
+                points.push({ x: IsoVaultX, y: IsoVaultY, type: 'IsoVault', value: 'IsoVault', color: '#FFFFFF' });
+                console.log(`IsoVault umístěn: x=${IsoVaultX}, y=${IsoVaultY}`);
+            } else {
+                console.log(`IsoVault neumístěn po ${attempts} pokusech`);
+                return;
+            }
+            const numPonds = Math.floor(rng() * 4) + 3;
+            const pondDirections = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];
+            let pondX = waterCenterX;
+            let pondY = waterCenterY;
+            let placedPonds = 0;
+            const maxAttempts = 50;
+            let attempt = 0;
+            console.log(`Pokus o umístění ${numPonds} jezírek`);
+            while (placedPonds < numPonds && attempt < maxAttempts) {
+                const dirIndex = Math.floor(rng() * pondDirections.length);
+                const dir = pondDirections[dirIndex];
+                const newX = pondX + dir[0];
+                const newY = pondY + dir[1];
+                console.log(`Pokus o jezírko ${placedPonds + 1}: x=${newX}, y=${newY}`);
+                if (
+                    newX >= 0 &&
+                    newX < 40 &&
+                    newY >= 0 &&
+                    newY < 40 &&
+                    isAreaFree(newX, newY) &&
+                    isMinimumDistance(newX, newY, ['water', 'pump'], 1)
+                ) {
+                    points.push({ x: newX, y: newY, type: 'pond', value: 'Small Pond', color: '#00FFFF' });
+                    pondX = newX;
+                    pondY = newY;
+                    placedPonds++;
+                    console.log(`Jezírko umístěno: x=${newX}, y=${newY}`);
+                } else {
+                    console.log(`Jezírko neumístěno: x=${newX}, y=${newY}, isAreaFree=${isAreaFree(newX, newY)}, isMinimumDistance=${isMinimumDistance(newX, newY, ['water', 'pump'], 1)}`);
+                }
+                attempt++;
+            }
+            if (placedPonds < numPonds) {
+                console.log(`Nedostatek jezírek (${placedPonds}/${numPonds}), zkouším umístit v oáze`);
+                const availablePixels = [];
+                for (let x = 0; x < 40; x++) {
+                    for (let y = 0; y < 40; y++) {
+                        if (
+                            isAreaFree(x, y) &&
+                            pixels.some(p => p.x === x && p.y === y) &&
+                            isMinimumDistance(x, y, ['water', 'pump'], 1)
+                        ) {
+                            availablePixels.push({ x, y });
+                        }
+                    }
+                }
+                availablePixels.sort(() => rng() - 0.5);
+                for (const p of availablePixels) {
+                    if (placedPonds >= numPonds) break;
+                    points.push({ x: p.x, y: p.y, type: 'pond', value: 'Small Pond', color: '#00FFFF' });
+                    placedPonds++;
+                    console.log(`Jezírko umístěno v oáze: x=${p.x}, y=${p.y}`);
+                }
+            }
+            console.log(`Umístěno ${placedPonds} jezírek`);
+            const [turretsPart = '', robotsPart = ''] = scDataRaw.split(',');
+            const turretsData = turretsPart.startsWith('turrets=') ? turretsPart.slice(8) : '';
+            const robotsData = robotsPart.startsWith('robots=') ? robotsPart.slice(7) : '';
+            console.log('Turrets data:', turretsData);
+            console.log('Robots data:', robotsData);
+            parseAndPlaceTurrets(turretsData, areas, rng);
+            parseAndPlaceRobots(robotsData, areas, rng);
+            console.log('Velikost oblastí:', {
+                north: areas.north.length,
+                south: areas.south.length,
+                west: areas.west.length,
+                east: areas.east.length,
+                base: areas.base.length
+            });
+            scInput.value = '';
+            renderScene();
+            requestAnimationFrame(animatePoints);
+        }
+
+        function colorBox(color) {
+            return `<span style="
+                display:inline-block;
+                width:1em;
+                height:1em;
+                background-color:${color};
+                border:1px solid #ffffff;
+                margin-right:0.5em;
+                vertical-align:middle;
+            "></span>`;
+        }
+
+
+        // Funkce pro generování statistik
+        function generateOasisStats() {
+            const totalPixels = 40 * 40; // 1600 pixelů
+
+            // Počítání desert pixelů
+            const desertCounts = {
+                '#FFD700': 0,
+                '#FFA500': 0,
+                '#FF8C00': 0
+            };
+            desertPixels.forEach(pixel => {
+                if (pixelTypes.desert[pixel.color]) {
+                    desertCounts[pixel.color]++;
+                }
+            });
+
+            // Počítání oasis pixelů a oblastí
+            const oasisCounts = {
+                '#90EE90': 0,
+                '#006400': 0,
+                '#228B22': 0,
+                '#32CD32': 0,
+                '#00FFFF': 0,
+                '#00008B': 0,
+                '#000000': 0,
+                '#FFFFFF': 0
+            };
+            const areasCounts = { north: 0, south: 0, east: 0, west: 0, base: 0 };
+            pixels.forEach(pixel => {
+                if (pixelTypes.oasis[pixel.color]) {
+                    oasisCounts[pixel.color]++;
+                }
+                // Přepočítání oblastí (stejná logika jako v generateOasis)
+                const centerX = 20; // Přibližný střed
+                const centerY = 20;
+                const distToCenter = Math.hypot(pixel.x - centerX, pixel.y - centerY);
+                if (distToCenter <= 5) {
+                    areasCounts.base++;
+                } else {
+                    const angle = Math.atan2(pixel.y - centerY, pixel.x - centerX);
+                    if (angle >= -Math.PI * 3/4 && angle < -Math.PI * 1/4) {
+                        areasCounts.north++;
+                    } else if (angle >= Math.PI * 1/4 && angle < Math.PI * 3/4) {
+                        areasCounts.south++;
+                    } else if (angle >= -Math.PI * 1/4 && angle < Math.PI * 1/4) {
+                        areasCounts.east++;
+                    } else {
+                        areasCounts.west++;
+                    }
+                }
+            });
+            points.forEach(point => {
+                if (['pond', 'water', 'pump', 'IsoVault'].includes(point.type)) {
+                    oasisCounts[point.color]++;
+                }
+            });
+
+            // Vytvoření obsahu modálu
+            let modalContent = '<h3>Desert 🏜️</h3>';
+            for (const [color, name] of Object.entries(pixelTypes.desert)) {
+                const count = desertCounts[color];
+                const percentage = ((count / totalPixels) * 100).toFixed(2);
+                modalContent += `<p>${colorBox(color)}${name}: ${count}px = ${percentage}%</p>`;
+            }
+            modalContent += '<p>☀️ UV Strength: Unknown</p>';
+            modalContent += '<p>_______________________</p>';
+
+            modalContent += '<h3>Oasis Areas 🧭</h3>';
+            for (const [area, count] of Object.entries(areasCounts)) {
+                const symbols = {
+                    north: '⬆️',
+                    south: '⬇️',
+                    east: '➡️',
+                    west: '⬅️',
+                    base: '🎯'
+                };
+                modalContent += `<p>${symbols[area]} ${area}: ${count}px</p>`;
+            }
+            modalContent += '<p>_______________________</p>';
+
+            modalContent += '<h3>Oasis Profile 🗺️</h3>';
+            for (const [color, name] of Object.entries(pixelTypes.oasis)) {
+                const count = oasisCounts[color];
+                const percentage = ((count / (pixels.length + points.filter(p => ['pond', 'water', 'pump', 'IsoVault'].includes(p.type)).length)) * 100).toFixed(2);
+
+                if (['Small Pond', 'Desert Borehole', 'WaterPump', 'IsoVault'].includes(name)) {
+                    const point = points.find(p => p.color === color && p.value === name);
+                    const position = point ? `(${point.x}, ${point.y})` : 'Není umístěn';
+                    modalContent += `<p>${colorBox(color)}${name}: ${count}px = ${percentage}%</p>`;
+                } else {
+                    modalContent += `<p>${colorBox(color)}${name}: ${count}px = ${percentage}%</p>`;
+                }
+            }
+
+
+            // Zobrazení modálu
+            const statsModal = document.getElementById('statsModal');
+            const statsModalContent = statsModal.querySelector('.modal-contentstats');
+            statsModalContent.innerHTML = modalContent;
+            statsModal.classList.add('active');
+
+            // Zavření modálu kliknutím mimo
+            const closeHandler = (e) => {
+                if (!statsModalContent.contains(e.target)) {
+                    statsModal.classList.add('fade-out');
+                    setTimeout(() => {
+                        closeModal('statsModal');
+                        document.removeEventListener('click', closeHandler);
+                    }, 4000);
+                }
+            };
+            setTimeout(() => {
+                document.addEventListener('click', closeHandler);
+            }, 100); // Malé zpoždění, aby se neaktivoval hned při otevření
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            setTimeout(() => {
+                modal.classList.add('fade-out');
+                setTimeout(() => {
+                    modal.classList.remove('active', 'fade-out');
+                }, 3000);
+            }, 10000);
+        }
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active', 'show', 'fade-out');
+        }
+
+        // Welcome text and loading bar
+        const asciiArt = [
+            " __       __  __       __   ______             __        __ ",
+            "|  \\     /  \\|  \\  _  |  \\ /      \\           |  \\      |  \\",
+            "| $$\\   /  $$| $$ / \\ | $$|  $$$$$$\\  ______  | $$  ____| $$",
+            "| $$$\\ /  $$$| $$/   \\| $$| $$$\\| $$ /      \\ | $$ /      $$",
+            "| $$$$\\  $$$$| $$  $$$\\ $$| $$$$\\ $$|  $$$$$$\\| $$|  $$$$$$$",
+            "| $$\\$$ $$ $$| $$ $$\\$$\\$$| $$\\$$\\$$| $$   \\$$| $$| $$  | $$",
+            "| $$ \\$$$| $$| $$$    \\$$$| $$_\\$$$$| $$      | $$| $$__| $$",
+            "| $$  \\$ | $$| $$$    \\$$$ \\$$  \\$$$| $$      | $$ \\$$    $$",
+            " \\$$      \\$$ \\$$      \\$$  \\$$$$$$  \\$$       \\$$  \\$$$$$$$",
+            "............................................................",
+            "_|_|_|                                              _|               ",
+            "_|    _|    _|_|      _|_|_|    _|_|    _|  _|_|  _|_|_|_|    _|_|_| ",
+            "_|    _|  _|_|_|_|  _|_|      _|_|_|_|  _|_|        _|      _|_|     ",
+            "_|    _|  _|            _|_|  _|        _|          _|          _|_| ",
+            "_|_|_|      _|_|_|  _|_|_|      _|_|_|  _|            _|_|  _|_|_|   "
+        ].join('\n');
+
+        function typeText(element, text, speed) {
+            element.innerHTML = '';
+            const lines = text.split('\n');
+            let currentLine = 0;
+            let currentChar = 0;
+            const lineContainer = document.createElement('div');
+            element.appendChild(lineContainer);
+            const type = () => {
+                if (currentLine < lines.length) {
+                    if (currentChar < lines[currentLine].length) {
+                        const currentElement = lineContainer.children[currentLine] || document.createElement('div');
+                        if (!lineContainer.children[currentLine]) lineContainer.appendChild(currentElement);
+                        currentElement.textContent += lines[currentLine][currentChar];
+                        currentChar++;
+                        setTimeout(type, speed);
+                    } else {
+                        currentLine++;
+                        currentChar = 0;
+                        setTimeout(type, speed);
+                    }
+                } else {
+                    const welcomeText = document.getElementById('welcome-text');
+                    welcomeText.style.opacity = '1';
+                    updateElementPositions();
+                }
+            };
+            type();
+        }
+
+        function typeWelcomeText(text = 'To continue please join a wallet. For now, however, Korlur is still offline and will be available in a few moon years. Connection simulation and oasis viewer are now running.') {
+            const welcomeText = document.getElementById('welcome-text');
+            const buildOasisButton = document.getElementById('build-oasis-button');
+            typeText(welcomeText, text, 50, () => {
+                updateElementPositions();
+                if (text === 'You don\'t have your own oasis in any desert, it is not yet possible to join with Korlur and build an oasis. Only the test function and the oasis viewer are available. Connection will be possible in a few moon years.') {
+                    buildOasisButton.classList.add('active');
+                } else {
+                    buildOasisButton.classList.remove('active');
+                }
+            });
+        }
+
+        function updateLoadingBar() {
+            const progressText = document.querySelector('.progress-text');
+            const errorText = document.querySelector('.error-text');
+            const totalDuration = 30000;
+            const minTarget = 79;
+            const maxTarget = 95;
+            const targetPercentage = Math.floor(Math.random() * (maxTarget - minTarget + 1)) + minTarget;
+            const updateInterval = 1000;
+            let currentPercentage = 0;
+            const updateProgress = () => {
+                if (currentPercentage < targetPercentage) {
+                    currentPercentage += (targetPercentage / (totalDuration / updateInterval));
+                    progressText.textContent = `${Math.min(Math.round(currentPercentage), targetPercentage)}%`;
+                }
+            };
+            const intervalId = setInterval(updateProgress, updateInterval);
+            const stopTime = (targetPercentage / 100) * totalDuration;
+            setTimeout(() => {
+                clearInterval(intervalId);
+                progressText.textContent = `${Math.round(targetPercentage)}%`;
+                errorText.textContent = 'ERRx4f3';
+                errorText.style.opacity = '1';
+            }, stopTime);
+            const loadingBar = document.querySelector('.loading-bar');
+            loadingBar.style.setProperty('--animation-duration', `${totalDuration / 1000}s`);
+            loadingBar.style.setProperty('--target-width', `${targetPercentage}%`);
+        }
+
+        function updateElementPositions() {
+            const logoLink = document.querySelector('.logo-link');
+            if (!logoLink) return;
+            const logoHeight = logoLink.getBoundingClientRect().height;
+            const welcomeText = document.getElementById('welcome-text');
+            const buildOasisButton = document.getElementById('build-oasis-button');
+            welcomeText.style.bottom = '70px';
+            buildOasisButton.style.bottom = '140px';
+        }
+
+        // Oasis event listeners
+        const canvas = document.getElementById('oasisCanvas');
+        canvas.width = 40;
+        canvas.height = 40;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true, alpha: true });
+        document.getElementById('desertOpacity').addEventListener('input', (e) => {
+            desertOpacity = e.target.value / 100;
+            console.log(`Poušť opacity nastavena na ${desertOpacity}`);
+            generateDesert();
+            renderScene();
+        });
+        document.getElementById('oasisOpacity').addEventListener('input', (e) => {
+            oasisOpacity = e.target.value / 100;
+            console.log(`Oáza opacity nastavena na ${oasisOpacity}`);
+            renderScene();
+        });
+        document.getElementById('oasisStats').addEventListener('click', generateOasisStats);
+        document.getElementById('addTurretButton').addEventListener('click', addTurret);
+        document.getElementById('addRobotButton').addEventListener('click', addRobot);
+        document.getElementById('generateButton').addEventListener('click', () => {
+            try {
+                generateOasis();
+            } catch (e) {
+                console.error('Chyba při generování oázy:', e);
+                alert('Failed to generate an oasis. This will be a problem on Korlur\'s side. He\'s certainly started working on a fix!');
+            }
+        });
+        const turretNames = {
+            't1': 'Watchtower',
+            't2': 'Artillery Tower',
+            't3': 'Sighting Tower',
+            't4': 'Hippie Tower'
+        };
+        const robotNames = {
+            'r1': 'Repairer',
+            'r2': 'Watchman',
+            'r3': 'Drunkard',
+            'r4': 'Baker'
+        };
+        // Globální proměnná pro uložení closeHandler
+        let modalCloseHandler = null;
+
+        canvas.addEventListener('click', (e) => {
+            e.stopPropagation(); // Zastavit propagaci události
+            const rect = canvas.getBoundingClientRect();
+            const clickX = Math.floor((e.clientX - rect.left) * (40 / rect.width));
+            const clickY = Math.floor((e.clientY - rect.top) * (40 / rect.height));
+            const modal = document.getElementById('modal');
+            const modalContent = modal.querySelector('.modal-content');
+
+            // Odebrat starý closeHandler, pokud existuje
+            if (modalCloseHandler) {
+                document.removeEventListener('click', modalCloseHandler);
+                modalCloseHandler = null;
+            }
+
+            const point = points.find(p => p.x === clickX && p.y === clickY);
+            if (point) {
+                let displayValue = point.value;
+                if (point.type === 'turret') {
+                    const turretId = point.value.replace('turret ', 't');
+                    displayValue = turretNames[turretId] || point.value;
+                } else if (point.type === 'robot') {
+                    const robotId = point.value.replace('robot ', 'r');
+                    displayValue = robotNames[robotId] || point.value;
+                }
+                modalContent.textContent = displayValue;
+                modal.classList.remove('fade-out');
+                modal.classList.add('show');
+                console.log(`Kliknuto na: x=${clickX}, y=${clickY}, value=${displayValue}`);
+
+                // Přidat listener pro zavření při kliknutí mimo canvas nebo modal-content
+                modalCloseHandler = (e) => {
+                    e.stopPropagation(); 
+                    const canvasRect = canvas.getBoundingClientRect();
+                    const isOutsideCanvas = (
+                        e.clientX < canvasRect.left ||
+                        e.clientX > canvasRect.right ||
+                        e.clientY < canvasRect.top ||
+                        e.clientY > canvasRect.bottom
+                    );
+                    if (isOutsideCanvas || !modalContent.contains(e.target)) {
+                        modal.classList.add('fade-out');
+                        setTimeout(() => {
+                            closeModal('modal');
+                            modal.classList.remove('fade-out');
+                            document.removeEventListener('click', modalCloseHandler);
+                            modalCloseHandler = null;
+                            console.log('Modal zavřen, classList:', modal.classList.toString());
+                        }, 2000);
+                    }
+                };
+                setTimeout(() => {
+                    document.addEventListener('click', modalCloseHandler);
+                }, 150);
+            } else {
+                if (modal.classList.contains('show')) {
+                    modal.classList.add('fade-out');
+                    setTimeout(() => {
+                        closeModal('modal');
+                        modal.classList.remove('fade-out');
+                        if (modalCloseHandler) {
+                            document.removeEventListener('click', modalCloseHandler);
+                            modalCloseHandler = null;
+                        }
+                        console.log('Modal zavřen (mimo bod), classList:', modal.classList.toString());
+                    }, 2000);
+                }
+                console.log(`Kliknuto na: x=${clickX}, y=${clickY}, žádný bod nenalezen`);
+            }
+        });
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = Math.floor((e.clientX - rect.left) * (40 / rect.width));
+            const mouseY = Math.floor((e.clientY - rect.top) * (40 / rect.height));
+            const point = points.find(p => p.x === mouseX && p.y === mouseY);
+            if (point) {
+                console.log(`Zvětšuji pixel: x=${point.x}, y=${point.y}, type=${point.type}, color=${point.color}`);
+                canvas.style.cursor = 'pointer';
+                highlightedPoint = point;
+                highlightTargetSize = 2;
+            } else {
+                canvas.style.cursor = 'default';
+                highlightedPoint = null;
+                highlightTargetSize = 1;
+            }
+        });
+
+        // Initialization
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.page').style.opacity = '1';
+                typeText(document.getElementById('logo-text'), asciiArt, 5);
+                typeWelcomeText();
+                updateLoadingBar();
+                try {
+                    generateOasis();
+                } catch (e) {
+                    console.error('Chyba při inicializaci:', e);
+                    alert('Failed to generate an oasis. This will be a problem on Korlur\'s side. He\'s certainly started working on a fix!');
+                }
+            }, 6000);
+        });
+        window.addEventListener('resize', updateElementPositions);
+    </script>
+</body>
+</html>
