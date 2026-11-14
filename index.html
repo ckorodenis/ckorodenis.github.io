@@ -216,11 +216,21 @@
             z-index: 3;
         }
 
-        .section-4 .fade-text {
-            font-family: 'Doto', monospace;
+        .section-4 .typewriter {
             text-align: right;
             font-size: clamp(14px, 4vw, 50px);
             line-height: 1.2;
+        }
+
+        .section-4 .typewriter .static-text,
+        .section-4 .typewriter .dynamic-text {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 0.25em;
+        }
+
+        .section-4 .typewriter .dynamic-text {
+            margin-left: 0;
         }
 
         .section-5 {
@@ -355,25 +365,50 @@
         }
 
         .tooltip-left .tooltip-text {
-            left: 45%;
-            margin-left: 10px;
+            left: 30px;
+            right: auto;
+            margin-left: 0;
         }
 
         .tooltip-right .tooltip-text {
-            right: 45%;
-            margin-right: 10px;
+            right: 30px;
+            left: auto;
+            margin-right: 0;
+        }
+
+        .section-2 .tooltip-right .tooltip-text {
+            left: 30px;
+            right: auto;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .section-3 .tooltip-right .tooltip-text {
+            right: 30px;
+            left: auto;
+            margin-right: 0;
+            margin-left: 0;
+        }
+
+        .section-4 .tooltip-left .tooltip-text {
+            left: 30px;
+            right: auto;
+            margin-left: 0;
+            margin-right: 0;
         }
 
         .section-5 .tooltip-left .tooltip-text {
-            left: 100%;
-            margin-left: 55px;
+            left: calc(100% + 10px);
+            right: auto;
+            margin-left: 0;
             top: 50%;
             transform: translateY(-50%);
         }
 
         .section-5 .tooltip-right .tooltip-text {
-            right: 100%;
-            margin-right: 35px;
+            right: calc(100% + 10px);
+            left: auto;
+            margin-right: 0;
             top: 50%;
             transform: translateY(-50%);
         }
@@ -469,10 +504,10 @@
         <div class="section section-2">
             <div class="content hidden">
                 <div class="fade-text">
-                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_network">Budování sítí</span></span>
-                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_it">IT Služby</span></span>
-                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_swhw">Vektor - Laser</span></span>
-                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_backup">Technologie výroby</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_network">IT služby</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_it">Projektové řízení</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_swhw">Stavební realizace</span></span>
+                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section2_backup">Technologický provoz</span></span>
                 </div>
                 <div class="divider"></div>
             </div>
@@ -481,9 +516,9 @@
         <div class="section section-3">
             <div class="content hidden">
                 <div class="typewriter" data-section="section3">
-                    <span class="tooltip tooltip-left" data-tooltip-key="HTML5 / CSS / PHP"><span class="static-text" data-key="section3_static1"></span></span>
-                    <span class="tooltip tooltip-left" data-tooltip-key="Python / SQLite"><span class="static-text" data-key="section3_static2"></span></span>
-                    <span class="tooltip tooltip-left" data-tooltip-key="JS / TS / Node.js"><span class="static-text" data-key="section3_static3"></span></span>
+                    <span class="tooltip tooltip-right" data-tooltip-key="HTML5 / CSS / PHP"><span class="static-text" data-key="section3_static1"></span></span>
+                    <span class="tooltip tooltip-right" data-tooltip-key="Python / SQLite"><span class="static-text" data-key="section3_static2"></span></span>
+                    <span class="tooltip tooltip-right" data-tooltip-key="JS / TS / Node.js"><span class="static-text" data-key="section3_static3"></span></span>
                     <span class="dynamic-text"></span>
                 </div>
                 <div class="divider"></div>
@@ -492,11 +527,11 @@
 
         <div class="section section-4">
             <div class="content hidden">
-                <div class="fade-text">
-                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section4_ai">Integrace AI</span></span>
-                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section4_web3">Web3 / DeWeb</span></span>
-                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section4_nft">SC / ASC / NFTs</span></span>
-                    <span class="tooltip tooltip-right"><span class="main-text" data-key="section4_game">Herní mechaniky</span></span>
+                <div class="typewriter" data-section="section4">
+                    <span class="dynamic-text"></span>
+                    <span class="tooltip tooltip-left" data-tooltip-key="Web3 / DeWeb"><span class="static-text" data-key="section4_web3"></span></span>
+                    <span class="tooltip tooltip-left" data-tooltip-key="SC / ASC / NFTs"><span class="static-text" data-key="section4_nft"></span></span>
+                    <span class="tooltip tooltip-left" data-tooltip-key="Herní scénáře"><span class="static-text" data-key="section4_game"></span></span>
                 </div>
                 <div class="divider"></div>
             </div>
@@ -516,7 +551,6 @@
                         <button class="copy-btn" data-copy="0NULL">⧉</button>
                     </div>
                     <div class="social-row">
-                        <div class="social-btn tooltip tooltip-left" data-tooltip-key="social_li_tooltip"></div>
                         <a href="https://t.me/CkoroDenis" class="social-btn tooltip tooltip-left" data-tooltip-key="social_tele_tooltip">
                             <img src="telegram.png" class="telegram-icon">
                         </a>
@@ -533,7 +567,7 @@
 
         <div class="section section-6">
             <div class="content hidden">
-                <p data-key="footer">© 2026 | 0NULL</p>
+                <p data-key="footer">© 2027 | 0NULL</p>
             </div>
         </div>
     </div>
@@ -545,86 +579,92 @@
 
         const translations = {
             "cs": {
-                "section1_static": "Sítě / Strojírenství / Programování / Blockchain",
-                "section1_dynamic": ["LAN_Sítě", "2D/3D_Modelování", "Laserové_Řezání", "Kovovýroba", "IT_Služby", "Integrace_AI", "Web3", "Herní_Vývoj", "Optimalizace"],
-                "section2_network": "Budování LAN sítí",
-                "section2_it": "2D/3D Modelování",
-                "section2_swhw": "Laserové Řezání",
-                "section2_backup": "Kovovýroba",
+                "section1_static": "IT / Inženýrství / Mechanika / Systémy",
+                "section1_dynamic": ["IT_Správa", "2D/3D", "Stroje", "Výkresy", "Stavby", "Prototypy", "Systémy", "Web", "Řízení", "Projektování", "Management", "Správa"],
+                "section2_network": "IT služby",
+                "section2_it": "Projekty",
+                "section2_swhw": "Stavby",
+                "section2_backup": "Technologie",
                 "section2_fade": {
-                    "Budování LAN sítí": "Návrh / Kabeláž / Domácnosti",
-                    "2D/3D Modelování": "CAD / Strojírenství / Prototypy",
-                    "Laserové Řezání": "Kovy / Plasty / Přesnost",
-                    "Kovovýroba": "Svařování / Lisování / Fe_Al_Cu"
+                    "IT služby": "HW/SW / Provoz / Podpora",
+                    "Projekty": "Plánování / Koordinace / Realizace",
+                    "Stavby": "Rekonstrukce / Výstavba / Inženýrské_stavby",
+                    "Technologie": "Seřizování / Hydraulika / Mechanika"
                 },
                 "section3_static1": "HTML5 / CSS / PHP",
                 "section3_static2": "Python / SQLite",
                 "section3_static3": "JS / TS / Node.js",
-                "section3_dynamic": ["Design", "WebApp", "Testing", "Automation", "LevelDesign", "UI", "Scripting", "NFTs", "UX", "Server", "Prototyping", "Backend", "Web3", "GameMechanics", "API", "Optimization", "Frontend", "Database", "Debugging"],
+                "section3_dynamic": ["Design", "WebApp", "Testing", "Systems", "Scénáře", "UI", "Scripting", "Data", "UX", "Server", "Prototype", "Backend", "Web", "Questy", "API", "Optimization", "Frontend", "Database", "Debugging"],
                 "section3_tooltips": {
-                    "HTML5 / CSS / PHP": "Moderní / Lehký / Přehledný",
-                    "Python / SQLite": "Scripty / Databáze / Automatizace",
+                    "HTML5 / CSS / PHP": "Web / MVP / Design",
+                    "Python / SQLite": "Scripty / Aplikace / Databáze",
                     "JS / TS / Node.js": "Frontend / Backend / API"
                 },
-                "section4_ai": "Integrace AI",
                 "section4_web3": "Web3 / DeWeb",
                 "section4_nft": "SC / ASC / NFTs",
-                "section4_game": "Herní mechaniky",
+                "section4_game": "Herní scénáře",
+                "section4_dynamic": ["MW0rld / Deserts", "Questy", "Loot", "SC", "NFT", "Deserts", "Tokeny", "Mechanika", "MC", "Ekosystém", "Logika", "Hratelnost", "VHS"],
                 "section4_fade": {
-                    "Integrace AI": "Web / Aplikace / Hry",
-                    "Web3 / DeWeb": "Decentralizace / Stabilita / Budoucnost",
-                    "SC / ASC / NFTs": "Smart_kontrakty / Nová_éra / NFT_Hry",
-                    "Herní mechaniky": "Vývoj / Scénáře / Level_design"
+                    "Web3 / DeWeb": "Decentralizace / Architektura / Budoucnost",
+                    "SC / ASC / NFTs": "Smart_Contracts / Digitální_aktiva / Ekosystém",
+                    "Herní scénáře": "Questy / Logika / Hratelnost"
+                },
+                "section4_tooltips": {
+                    "Web3 / DeWeb": "Decentralizace / Architektura / Budoucnost",
+                    "SC / ASC / NFTs": "Smart_Contracts / Digitální_aktiva / Ekosystém",
+                    "Herní scénáře": "Questy / Logika / Hratelnost"
                 },
                 "email_label": "ckorodenis@gmail.com",
-                "email_tooltip": "Poptávky / Nabídky / Texty",
-                "phone_label": "0NULL",
-                "phone_tooltip": "Nálehavé / Rychlé_řešení / Konzultace",
-                "social_li_tooltip": "Profil_nedostupný",
+                "email_tooltip": "Poptávky / Projekty",
+                "phone_label": "NEDOSTUPNÝ",
+                "phone_tooltip": "Rychlá komunikace / Zpráva",
                 "social_tele_tooltip": "@CkoroDenis",
-                "mw0rld_tooltip": "EpicTextGame / NFTs / Quests",
-                "footer": "© 2025 | 0NULL"
+                "mw0rld_tooltip": "MW0rld / Questy / MagPlanet",
+                "footer": "© 2027 | 0NULL"
             },
             "en": {
-                "section1_static": "Networks / Engineering / Programming / Blockchain",
-                "section1_dynamic": ["LAN_Networks", "2D/3D_Modeling", "Laser_Cutting", "Metalworking", "IT_Services", "AI_Integration", "Web3", "Game_Development", "Optimization"],
-                "section2_network": "LAN Network Building",
-                "section2_it": "2D/3D Modeling",
-                "section2_swhw": "Laser Cutting",
-                "section2_backup": "Metalworking",
+                "section1_static": "IT / Engineering / Mechanics / Systems",
+                "section1_dynamic": ["IT_Administration", "2D/3D", "Machines", "Drawings", "Construction", "Prototypes", "Systems", "Web", "Control", "Design", "Management", "Administration"],
+                "section2_network": "IT Services",
+                "section2_it": "Projects",
+                "section2_swhw": "Construction",
+                "section2_backup": "Technology",
                 "section2_fade": {
-                    "LAN Network Building": "Design / Cabling / Households",
-                    "2D/3D Modeling": "CAD / Engineering / Prototypes",
-                    "Laser Cutting": "Metals / Plastics / Precision",
-                    "Metalworking": "Welding / Pressing / Fe_Al_Cu"
+                    "IT Services": "HW/SW / Operation / Support",
+                    "Projects": "Planning / Coordination / Execution",
+                    "Construction": "Renovations / Construction / Utility_Infrastructure",
+                    "Technology": "Tuning / Hydraulics / Mechanics"
                 },
                 "section3_static1": "HTML5 / CSS / PHP",
                 "section3_static2": "Python / SQLite",
                 "section3_static3": "JS / TS / Node.js",
-                "section3_dynamic": ["Design", "WebApp", "Testing", "Automation", "LevelDesign", "UI", "Scripting", "NFTs", "UX", "Server", "Prototyping", "Backend", "Web3", "GameMechanics", "API", "Optimization", "Frontend", "Database", "Debugging"],
+                "section3_dynamic": ["Design", "WebApp", "Testing", "Systems", "Scenarios", "UI", "Scripting", "Data", "UX", "Server", "Prototype", "Backend", "Web", "Quests", "API", "Optimization", "Frontend", "Database", "Debugging"],
                 "section3_tooltips": {
-                    "HTML5 / CSS / PHP": "Modern / Lightweight / Clear",
-                    "Python / SQLite": "Scripts / Databases / Automation",
+                    "HTML5 / CSS / PHP": "Web / MVP / Design",
+                    "Python / SQLite": "Scripts / Applications / Databases",
                     "JS / TS / Node.js": "Frontend / Backend / API"
                 },
-                "section4_ai": "AI Integration",
                 "section4_web3": "Web3 / DeWeb",
                 "section4_nft": "SC / ASC / NFTs",
-                "section4_game": "Game Mechanics",
+                "section4_game": "Game Scenarios",
+                "section4_dynamic": ["MW0rld / Deserts", "Quests", "Loot", "SC", "NFT", "Deserts", "Tokens", "Mechanics", "MC", "Ecosystem", "Logic", "Gameplay", "VHS"],
                 "section4_fade": {
-                    "AI Integration": "Web / Apps / Games",
-                    "Web3 / DeWeb": "Decentralization / Stability / Future",
-                    "SC / ASC / NFTs": "Smart_Contracts / New_Era / NFT_Games",
-                    "Game Mechanics": "Development / Scenarios / Level_Design"
+                    "Web3 / DeWeb": "Decentralization / Architecture / Future",
+                    "SC / ASC / NFTs": "Smart_Contracts / Digital_Assets / Ecosystem",
+                    "Game Scenarios": "Quests / Logic / Gameplay"
+                },
+                "section4_tooltips": {
+                    "Web3 / DeWeb": "Decentralization / Architecture / Future",
+                    "SC / ASC / NFTs": "Smart_Contracts / Digital_Assets / Ecosystem",
+                    "Game Scenarios": "Quests / Logic / Gameplay"
                 },
                 "email_label": "ckorodenis@gmail.com",
-                "email_tooltip": "Inquiries / Offers / Texts",
-                "phone_label": "0NULL",
-                "phone_tooltip": "Czech_only_please",
-                "social_li_tooltip": "Profile_unavailable",
+                "email_tooltip": "Inquiries / Projects",
+                "phone_label": "UNAVAILABLE",
+                "phone_tooltip": "Fast communication / Message",
                 "social_tele_tooltip": "@CkoroDenis",
-                "mw0rld_tooltip": "EpicTextGame / NFTs / Quests",
-                "footer": "© 2026 | 0NULL"
+                "mw0rld_tooltip": "MW0rld / Quests / MagPlanet",
+                "footer": "© 2027 | 0NULL"
             }
         };
 
@@ -690,6 +730,9 @@
                 const mainTextElement = tooltip.querySelector('.main-text');
                 const key = mainTextElement ? mainTextElement.getAttribute('data-key') : null;
                 const tooltipKey = tooltip.getAttribute('data-tooltip-key');
+                const staticTextElement = tooltip.querySelector('.static-text');
+                const staticTextKey = staticTextElement ? staticTextElement.getAttribute('data-key') : null;
+                const translatedTooltipKey = staticTextKey ? translations[lang][staticTextKey] : tooltipKey;
 
                 let tooltipText = tooltip.querySelector('.tooltip-text');
                 if (!tooltipText) {
@@ -702,9 +745,8 @@
                 if (tooltip.closest('.section-2') && key) {
                     const translatedText = translations[lang][key];
                     words = translations[lang].section2_fade[translatedText];
-                } else if (tooltip.closest('.section-4') && key) {
-                    const translatedText = translations[lang][key];
-                    words = translations[lang].section4_fade[translatedText];
+                } else if (tooltip.closest('.section-4') && tooltipKey) {
+                    words = translations[lang].section4_tooltips[translatedTooltipKey] || translations[lang].section4_fade[translatedTooltipKey];
                 } else if (tooltip.closest('.section-3') && tooltipKey) {
                     words = translations[lang].section3_tooltips[tooltipKey];
                 } else if (tooltip.closest('.section-5') && tooltipKey) {
@@ -722,8 +764,10 @@
 
             const section1Dynamic = document.querySelector('.section-1 .dynamic-text');
             const section3Dynamic = document.querySelector('.section-3 .dynamic-text');
+            const section4Dynamic = document.querySelector('.section-4 .dynamic-text');
             typeWord(section1Dynamic, translations[lang].section1_dynamic);
             typeWord(section3Dynamic, translations[lang].section3_dynamic);
+            typeWord(section4Dynamic, translations[lang].section4_dynamic);
         }
 
         const langToggle = document.querySelector('.lang-toggle');
@@ -746,7 +790,7 @@
                 setTimeout(() => {
                     tooltipText.style.visibility = 'hidden';
                     if (activeTooltip === tooltipText) activeTooltip = null;
-                }, 3000);
+                }, 15000);
             });
             tooltip.addEventListener('mouseleave', () => {
                 tooltipText.style.visibility = 'hidden';
@@ -761,7 +805,7 @@
                 setTimeout(() => {
                     tooltipText.style.visibility = 'hidden';
                     if (activeTooltip === tooltipText) activeTooltip = null;
-                }, 3000);
+                }, 5000);
             });
         });
 
@@ -801,7 +845,7 @@
                     setTimeout(() => {
                         tooltipText.style.visibility = 'hidden';
                         if (activeTooltip === tooltipText) activeTooltip = null;
-                    }, 3000);
+                    }, 15000);
                 });
                 tooltip.addEventListener('mouseleave', () => {
                     tooltipText.style.visibility = 'hidden';
@@ -816,7 +860,7 @@
                     setTimeout(() => {
                         tooltipText.style.visibility = 'hidden';
                         if (activeTooltip === tooltipText) activeTooltip = null;
-                    }, 3000);
+                    }, 5000);
                 });
             });
 
@@ -844,6 +888,8 @@
             setTimeout(() => {
                 contents[3].classList.remove("hidden");
                 contents[3].classList.add("visible");
+                const writer4 = contents[3].querySelector('.dynamic-text');
+                typeWord(writer4, translations[currentLang].section4_dynamic);
             }, 8000);
 
             setTimeout(() => {
